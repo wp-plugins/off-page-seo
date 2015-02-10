@@ -11,9 +11,11 @@ Author: Jakub Glos
 Author URI: http://www.offpageseoplugin.com/
 License: GPLv2
 
-Gives you tools to build your Off Page SEO and monitor progress.
+Provide you tools to build your Off Page SEO, get backlinks and monitor progress.
 
 == Description ==
+
+Let's build better websites with Off Page SEO plugin!
 
 = Features =
 * Rank Reporter (checks rank in SERP every 3 days)
@@ -27,7 +29,8 @@ Gives you tools to build your Off Page SEO and monitor progress.
 = Supported languages =
 Plugin itself supports all languages - search results, rank reports.
 
-For backlinks and commenting opportunities we currently supports languages bellow. You are most welcome to help us developing this plugin. 
+For backlinks and commenting opportunities we currently supports languages bellow. You are most welcome to help us developing this plugin.
+
 * English 
 * Czech
 
