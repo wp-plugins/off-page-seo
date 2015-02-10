@@ -1,6 +1,7 @@
 <?php
 require_once('../tools/pagerank.php');
 require_once('../tools/simple-html-dom.php');
+require_once('../ops-commenting.php');
 $pr = new Page_Rank();
 
 // set some counters
@@ -10,41 +11,23 @@ $c = 0;
 // get query
 $query = $_POST['query'];
 
-// set tail
-if ($_POST['option'] == 'edu-blogs') {
-    $tail = 'site:.edu inurl:blog "post a comment" -"you must be logged in"';
-} elseif ($_POST['option'] == 'gov-blogs') {
-    $tail = 'site:.gov inurl:blog "post a comment" -"you must be logged in"';
-} elseif ($_POST['option'] == 'html-comments') {
-    $tail = '"Allowed HTML tags:"';
-} elseif ($_POST['option'] == 'comment-luv-premium') {
-    $tail = '"This blog uses premium CommentLuv" -"The version of CommentLuv on this site is no longer supported."';
-} elseif ($_POST['option'] == 'do-follow-comments') {
-    $tail = '"Notify me of follow-up comments?" "Submit the word you see below:"';
-} elseif ($_POST['option'] == 'expression-engine') {
-    $tail = '"powered by expressionengine"';
-} elseif ($_POST['option'] == 'hubpages') {
-    $tail = 'site:hubpages.com "hot hubs"';
-} elseif ($_POST['option'] == 'keywordluv') {
-    $tail = '"Enter YourName@YourKeywords"';
-} elseif ($_POST['option'] == 'livefyre') {
-    $tail = '"get livefyre" "comment help" -"Comments have been disabled for this post"';
-} elseif ($_POST['option'] == 'intensedebate') {
-    $tail = '"if you have a website, link to it here" "post a new comment"';
-} elseif ($_POST['option'] == 'squidoo-addtolist') {
-    $tail = 'site:squidoo.com "add to this list"';
-} else {
-    $tail = '';
-}
+$all_tails = OPS_Commenting::ops_get_comment_queries($_POST['lang']);
+$tail_string = $all_tails[$_POST['option']]['tail'];
 
-// merge query and tail
-$q = $query . ' ' . $tail;
+// check if keyword is in it
+if (strpos($tail_string, '%keyword%') !== false) {
+    $q = str_replace('%keyword%', $query, $tail_string);
+} else {
+    $q = $query . ' ' . $tail_string;
+}
 $q = urlencode($q);
+
+
 
 
 // get results
 $start = $n * 10;
-$url = 'http://www.google.com/search?hl=' . $_POST["lang"] . '&q=' . $q;
+$url = 'http://www.google.com/search?hl=' . $_POST['lang'] . '&q=' . $q . '&num=30';
 
 $str = ops_curl($url);
 
@@ -107,7 +90,7 @@ if ($html) {
         </div>
 
 
-    <?php foreach ($results as $result): ?>
+        <?php foreach ($results as $result): ?>
             <div class="result">
                 <div class="number">
                     #<?php echo $r ?>
@@ -118,20 +101,21 @@ if ($html) {
                         <?php echo $result['link']; ?>
                     </div>
                     <div class="description">
-        <?php echo $result['descr']; ?>
+                        <?php echo $result['descr']; ?>
                     </div>
                 </div>
                 <div class="info">
                     <div class="tab">
-        <?php echo $result['pr']; ?>
+                        <?php echo $result['pr']; ?>
                     </div>
                 </div>
             </div>
-        <?php $r++ ?>
-    <?php endforeach ?>
+            <?php $r++ ?>
+        <?php endforeach ?>
         <div class="more-results">
             <a href="<?php echo $url ?>" class="button button-primary" target="_blank">More results on Google</a>
         </div>
+
     </div>
 <?php else : ?>
     <div class="ops-com-results">
