@@ -188,8 +188,6 @@ class Off_Page_SEO {
      * @param type $value
      */
     public static function ops_update_option($option, $value) {
-        
-        
         if (is_multisite()) {
             update_blog_option(get_current_blog_id(), 'ops_settings', $value);
         } else {

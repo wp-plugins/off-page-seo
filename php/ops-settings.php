@@ -125,7 +125,7 @@ class OPS_Settings {
                     <div class="postbox">
                         <h3 class="ops-h3">Supported languages</h3>
                         <div class="ops-padding">
-                            <p>We currently supports two languages.</p>
+                            <p>Please choose your language.</p>
                             <select name="lang">
                                 <?php $languages = Off_Page_SEO::ops_lang_array() ?>
                                 <?php foreach ($languages as $key => $value): ?>

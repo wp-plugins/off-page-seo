@@ -185,6 +185,7 @@ class OPS_Dashboard {
                     Enjoying plugin?
                 </div>
                 <div class="help">
+                    We want your <a href="mailto:info@offpageseoplugin.com">feedback</a>!<br/>
                     Help us buy new spaceship.
                 </div>
                 <div class="dont-bother">
