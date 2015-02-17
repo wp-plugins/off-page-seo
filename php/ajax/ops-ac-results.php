@@ -2,13 +2,15 @@
 require_once('../tools/alexarank.php');
 require_once('../tools/pagerank.php');
 require_once('../tools/simple-html-dom.php');
+require_once('../ops.php');
+$settings = Off_Page_SEO::ops_get_settings();
+
 $pr = new Page_Rank();
 $ar = new Alexa_Rank();
-
 $n = 1;
 
 
-$url = 'http://www.google.com/search?hl=' . $_POST["lang"] . '&start=0&q=' . urlencode($_POST['query']) . '&num=20';
+$url = 'http://www.google.'.$settings['google_domain'].'/search?hl=' . $_POST["lang"] . '&start=0&q=' . urlencode($_POST['query']) . '&num=20';
 $str = ops_curl($url);
 $html = str_get_html($str);
 

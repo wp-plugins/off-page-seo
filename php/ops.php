@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Main plugin class
  * */
@@ -11,7 +12,7 @@ class Off_Page_SEO {
      * */
     public function __construct() {
 
-        // add_action('wp_dashboard_setup', array($this, 'ops_add_dashboard_graph'));
+        add_action('wp_dashboard_setup', array($this, 'ops_add_dashboard_widgets'));
 
         add_action('admin_menu', array($this, 'init'));
 
@@ -22,16 +23,12 @@ class Off_Page_SEO {
      * Add administration menu and styles
      * */
     public function init() {
-
-
         // analyze competitors
-        add_menu_page('Off Page SEO', 'Off Page SEO', 'read', 'ops', array($this, 'ops_dashboard'), 'dashicons-groups', 91);
+        add_menu_page('Off Page SEO', 'Off Page SEO', 'read', 'ops', array($this, 'ops_dashboard'), 'dashicons-groups', '2.0981816');
 
         // settings
-        add_submenu_page('ops', 'Analyze Competitors', 'Analyze Competitors', 'read', 'ops_analyze_competitors', array($this, 'ops_analyze_competitors'));
+        add_submenu_page('ops', 'Analyze Keyword', 'Analyze Keyword', 'read', 'ops_analyze_keyword', array($this, 'ops_analyze_keyword'));
 
-        // settings
-        add_submenu_page('ops', 'Commenting', 'Commenting', 'read', 'ops_commenting', array($this, 'ops_commenting'));
 
         // settings
         add_submenu_page('ops', 'Backlinks', 'Backlinks', 'read', 'ops_backlinks', array($this, 'ops_backlinks'));
@@ -45,7 +42,7 @@ class Off_Page_SEO {
         wp_enqueue_style('off_page_seo_css', plugins_url('off-page-seo/css/style.css'));
 
         wp_enqueue_script('off_page_seo_js', plugins_url('off-page-seo/js/ops-main.js'));
-        
+
         wp_enqueue_style('ops_select_2_css', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-beta.3/css/select2.min.css');
 
         wp_enqueue_script('ops_select_2_js', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-beta.3/js/select2.min.js');
@@ -54,15 +51,23 @@ class Off_Page_SEO {
     /**
      * call dashboard
      */
-    public function ops_add_dashboard_widget() {
-        wp_add_dashboard_widget('cool_beans', 'Tutorials & Videos', array($this, 'ops_render_dashboard_widget'));
+    public function ops_add_dashboard_widgets() {
+        wp_add_dashboard_widget('off_page_seo_wp_dashboard_reporter', 'Off Page SEO Rank Reporter', array($this, 'ops_render_dashboard_widget_reporter'));
+        wp_add_dashboard_widget('off_page_seo_wp_dashboard_backlinks', 'Off Page SEO Rank Backlinks', array($this, 'ops_render_dashboard_widget_backlinks'));
     }
 
     /**
      * Render Dashboard Widget
      */
-    public function ops_render_dashboard_widget() {
-        echo "this will be added in next versions";
+    public function ops_render_dashboard_widget_reporter() {
+        new OPS_Dashboard_Widget_Reporter;
+    }
+
+    /**
+     * Render Dashboard Widget
+     */
+    public function ops_render_dashboard_widget_backlinks() {
+        new OPS_Dashboard_Widget_Backlinks;
     }
 
     /**
@@ -75,15 +80,8 @@ class Off_Page_SEO {
     /**
      * Analyze Competitors Page Call
      */
-    public function ops_analyze_competitors() {
-        new OPS_Analyze_Competitors;
-    }
-
-    /**
-     * Commenting Page Call
-     */
-    public function ops_commenting() {
-        new OPS_Commenting;
+    public function ops_analyze_keyword() {
+        new OPS_Analyze_Keyword;
     }
 
     /**
@@ -108,12 +106,12 @@ class Off_Page_SEO {
     }
 
     /**
-     * Runs every 3,5 days and updates positions in Google
+     * Runs every 3 days and updates positions in Google
      */
     public static function ops_position_cron() {
         $settings = Off_Page_SEO::ops_get_settings();
         $diff = time() - $settings['last_check'];
-        if ($diff > 302400 && !is_admin()) { // 302400
+        if ($diff > 259200 && !is_admin()) { // 302400
             // update last check first
             $now = time();
             $settings['last_check'] = $now;
@@ -158,7 +156,7 @@ class Off_Page_SEO {
         $now = time();
         $diff = $now - $settings['last_check_site_info'];
         $home = get_home_url();
-        if ($diff > 86400) {
+        if ($diff > 10) { //86400
             $pr = new Page_Rank();
             $ar = new Alexa_Rank();
             $socials = file_get_contents('http://count.donreach.com/?url=' . $home);
@@ -177,6 +175,17 @@ class Off_Page_SEO {
             $settings['site_info']['delicious'] = $socials->shares->delicious;
             $settings['site_info']['reddit'] = $socials->shares->reddit;
             $settings['site_info']['linkedin'] = $socials->shares->linkedin;
+
+            // check for GB
+            $url = Off_Page_SEO::$mother . '/check?site_url='. urlencode(get_home_url());
+            $str = ops_curl($url);
+            $html = str_get_html($str);
+            
+            if(strpos($html, 'IS')){
+                $settings['site_info']['guest_posting'] = true;
+            } else {
+                $settings['site_info']['guest_posting'] = false;
+            }
 
             Off_Page_SEO::ops_update_option('ops_settings', serialize($settings));
         }
@@ -400,6 +409,111 @@ class Off_Page_SEO {
             'zu' => 'Zulu',
         );
         return $languages;
+    }
+
+    public static function ops_google_domains_array() {
+        $google_domains = array(
+            "com" => "Default - google.com",
+            "as" => "American Samoa - google.as",
+            "off.ai" => "Anguilla - google.off.ai",
+            "com.ag" => "Antigua and Barbuda - google.com.ag",
+            "com.ar" => "Argentina - google.com.ar",
+            "com.au" => "Australia - google.com.au",
+            "at" => "Austria - google.at",
+            "az" => "Azerbaijan - google.az",
+            "be" => "Belgium - google.be",
+            "com.br" => "Brazil - google.com.br",
+            "vg" => "British Virgin Islands - google.vg",
+            "bi" => "Burundi - google.bi",
+            "ca" => "Canada - google.ca",
+            "td" => "Chad - google.td",
+            "cl" => "Chile - google.cl",
+            "com.co" => "Colombia - google.com.co",
+            "co.cr" => "Costa Rica - google.co.cr",
+            "ci" => "Côte d\'Ivoire - google.ci",
+            "com.cu" => "Cuba - google.com.cu",
+            "cz" => "Czech Republic - google.cz",
+            "cd" => "Dem. Rep. of the Congo - google.cd",
+            "dk" => "Denmark - google.dk",
+            "dj" => "Djibouti - google.dj",
+            "com.do" => "Dominican Republic - google.com.do",
+            "com.ec" => "Ecuador - google.com.ec",
+            "com.sv" => "El Salvador - google.com.sv",
+            "fm" => "Federated States of Micronesia - google.fm",
+            "com.fj" => "Fiji - google.com.fj",
+            "fi" => "Finland - google.fi",
+            "fr" => "France - google.fr",
+            "gm" => "The Gambia - google.gm",
+            "ge" => "Georgia - google.ge",
+            "de" => "Germany - google.de",
+            "com.gi" => "Gibraltar - google.com.gi",
+            "com.gr" => "Greece - google.com.gr",
+            "gl" => "Greenland - google.gl",
+            "gg" => "Guernsey - google.gg",
+            "hn" => "Honduras - google.hn",
+            "com.hk" => "Hong Kong - google.com.hk",
+            "co.hu" => "Hungary - google.co.hu",
+            "co.in" => "India - google.co.in",
+            "ie" => "Ireland - google.ie",
+            "co.im" => "Isle of Man - google.co.im",
+            "co.il" => "Israel - google.co.il",
+            "it" => "Italy - google.it",
+            "com.jm" => "Jamaica - google.com.jm",
+            "co.jp" => "Japan - google.co.jp",
+            "co.je" => "Jersey - google.co.je",
+            "kz" => "Kazakhstan - google.kz",
+            "co.kr" => "Korea - google.co.kr",
+            "lv" => "Latvia - google.lv",
+            "co.ls" => "Lesotho - google.co.ls",
+            "li" => "Liechtenstein - google.li",
+            "lt" => "Lithuania - google.lt",
+            "lu" => "Luxembourg - google.lu",
+            "mw" => "Malawi - google.mw",
+            "com.my" => "Malaysia - google.com.my",
+            "com.mt" => "Malta - google.com.mt",
+            "mu" => "Mauritius - google.mu",
+            "com.mx" => "México - google.com.mx",
+            "ms" => "Montserrat - google.ms",
+            "com.na" => "Namibia - google.com.na",
+            "com.np" => "Nepal - google.com.np",
+            "nl" => "Netherlands - google.nl",
+            "co.nz" => "New Zealand - google.co.nz",
+            "com.ni" => "Nicaragua - google.com.ni",
+            "com.nf" => "Norfolk Island - google.com.nf",
+            "com.pk" => "Pakistan - google.com.pk",
+            "com.pa" => "Panamá - google.com.pa",
+            "com.py" => "Paraguay - google.com.py",
+            "com.pe" => "Perú - google.com.pe",
+            "com.ph" => "Philippines - google.com.ph",
+            "pn" => "Pitcairn Islands - google.pn",
+            "pl" => "Poland - google.pl",
+            "pt" => "Portugal - google.pt",
+            "com.pr" => "Puerto Rico - google.com.pr",
+            "cg" => "Rep. of the Congo - google.cg",
+            "ro" => "Romania - google.ro",
+            "ru" => "Russia - google.ru",
+            "rw" => "Rwanda - google.rw",
+            "sh" => "Saint Helena - google.sh",
+            "sm" => "San Marino - google.sm",
+            "com.sg" => "Singapore - google.com.sg",
+            "sk" => "Slovakia - google.sk",
+            "co.za" => "South Africa - google.co.za",
+            "es" => "Spain - google.es",
+            "se" => "Sweden - google.se",
+            "ch" => "Switzerland - google.ch",
+            "com.tw" => "Taiwan - google.com.tw",
+            "co.th" => "Thailand - google.co.th",
+            "tt" => "Trinidad and Tobago - google.tt",
+            "com.tr" => "Turkey - google.com.tr",
+            "com.ua" => "Ukraine - google.com.ua",
+            "ae" => "United Arab Emirates - google.ae",
+            "co.uk" => "United Kingdom - google.co.uk",
+            "com.uy" => "Uruguay - google.com.uy",
+            "uz" => "Uzbekistan - google.uz",
+            "vu" => "Vanuatu - google.vu",
+            "co.ve" => "Venezuela - google.co.ve"
+        );
+        return $google_domains;
     }
 
 }

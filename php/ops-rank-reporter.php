@@ -119,7 +119,7 @@ class OPS_Rank_Reporter {
 
                             <div class="ops-graph-kw">
                                 <?php echo $graph['keyword'] ?>
-                                <a href="http://www.google.com/search?hl=<?php echo $settings['lang'] ?>&q=<?php echo urlencode($graph['keyword']) ?>" target="_blank">
+                                <a href="http://www.google.<?php echo $settings['google_domain'] ?>/search?hl=<?php echo $settings['lang'] ?>&q=<?php echo urlencode($graph['keyword']) ?>" target="_blank">
                                     <img src="<?php echo plugins_url('off-page-seo/img/icon-link.png') ?>" />
                                 </a>
                                 <?php if (isset($graph['volume']) && $graph['volume']): ?>
@@ -131,7 +131,6 @@ class OPS_Rank_Reporter {
                             </div>
                         </div>
                         <div class="right-col">
-                            <?php $positions = $this->ops_get_positions($graph['url'], $graph['keyword']) ?>
 
                             <?php if (isset($positions[0]['position'])): ?>
                                 <div class="ops-show-graph">
@@ -235,7 +234,7 @@ class OPS_Rank_Reporter {
         $n = 1;
         $position = 100;
 
-        $url = 'http://www.google.com/search?hl=' . $settings['lang'] . '&start=0&q=' . urlencode($keyword) . '&num=100&pws=0&adtest=off';
+        $url = 'http://www.google.'.$settings['google_domain'].'/search?hl=' . $settings['lang'] . '&start=0&q=' . urlencode($keyword) . '&num=100&pws=0&adtest=off';
         $str = ops_curl($url);
         $html = str_get_html($str);
         $linkObjs = $html->find('h3.r a');
@@ -304,7 +303,7 @@ class OPS_Rank_Reporter {
      * @param type $keyword
      * @return array
      */
-    public function ops_get_positions($url, $keyword) {
+    public static function ops_get_positions($url, $keyword) {
         global $wpdb;
         $row = $wpdb->get_row("SELECT * FROM " . $wpdb->base_prefix . "ops_rank_report WHERE url = '" . $url . "' AND keyword = '" . $keyword . "'", ARRAY_A);
         $positions = unserialize($row['positions']);

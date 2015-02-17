@@ -17,7 +17,16 @@ class OPS_Knowledge_Base {
         ?>
         <div class="wrap" id="ops-knowledge-base">
             <h2 class="ops-h2">Knowledge Base</h2>
-            <?php echo $data; ?>
+            <div class="ops-breadcrumbs">
+                <ul>
+                    <li><a href="admin.php?page=ops">Dashboard</a> &#8658;</li>
+                    <li>Knowledge Base</li>
+                </ul>
+            </div>
+            <div class="ops-knowledge-base-feed">
+                <?php echo $data; ?>
+            </div>
+
         </div>
         <?php
     }

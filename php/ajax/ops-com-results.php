@@ -1,8 +1,10 @@
 <?php
 require_once('../tools/pagerank.php');
 require_once('../tools/simple-html-dom.php');
-require_once('../ops-commenting.php');
+require_once('../ops-backlinks-comment.php');
+require_once('../ops.php');
 $pr = new Page_Rank();
+$settings = Off_Page_SEO::ops_get_settings();
 
 // set some counters
 $r = 1;
@@ -11,7 +13,7 @@ $c = 0;
 // get query
 $query = $_POST['query'];
 
-$all_tails = OPS_Commenting::ops_get_comment_queries($_POST['lang']);
+$all_tails = OPS_Backlinks_Comment::ops_get_comment_queries($_POST['lang']);
 $tail_string = $all_tails[$_POST['option']]['tail'];
 
 // check if keyword is in it
@@ -27,7 +29,7 @@ $q = urlencode($q);
 
 // get results
 $start = $n * 10;
-$url = 'http://www.google.com/search?hl=' . $_POST['lang'] . '&q=' . $q . '&num=30';
+$url = 'http://www.google.'.$settings['google_domain'].'/search?hl=' . $_POST['lang'] . '&q=' . $q . '&num=30';
 
 $str = ops_curl($url);
 

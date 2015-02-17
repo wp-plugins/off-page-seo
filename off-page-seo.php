@@ -11,6 +11,10 @@
   Text Domain: off-page-seo
  */
 
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(-1);
+
 // no need on cron job
 if (defined('DOING_CRON') || isset($_GET['doing_wp_cron'])) {
     return;
@@ -21,14 +25,17 @@ if (defined('DOING_CRON') || isset($_GET['doing_wp_cron'])) {
  */
 require_once('php/ops.php');
 require_once('php/ops-dashboard.php');
+require_once('php/ops-dashboard-widget-reporter.php');
+require_once('php/ops-dashboard-widget-backlinks.php');
 require_once('php/ops-rank-reporter.php');
-require_once('php/ops-analyze-competitors.php');
-require_once('php/ops-commenting.php');
+require_once('php/ops-analyze-keyword.php');
 require_once('php/ops-backlinks.php');
+require_once('php/ops-backlinks-feed.php');
+require_once('php/ops-backlinks-gb.php');
+require_once('php/ops-backlinks-comment.php');
 require_once('php/ops-knowledge-base.php');
 require_once('php/ops-settings.php');
 
-//require_once('php/moz/bootstrap.php');
 /*
  * Tools
  */
@@ -47,7 +54,7 @@ if (is_admin()) {
         $ops = new OPS_Multisite();
     }
 }
-
+      
 /*
  *  This fires iframe which will update rank positions
  */
@@ -106,6 +113,7 @@ function on_activate() {
             ),
             'lang' => 'en',
             'donate' => 'on',
+            'google_domain' => 'com',
             'show' => array(
                 'page_rank' => 'on',
                 'alexa_rank' => 'on',
@@ -118,3 +126,4 @@ function on_activate() {
         Off_Page_SEO::ops_update_option('ops_settings', serialize($settings));
     }
 }
+  

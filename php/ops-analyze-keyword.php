@@ -1,6 +1,6 @@
 <?php
 
-class OPS_Analyze_Competitors {
+class OPS_Analyze_Keyword {
 
     /**
      * Initialization of Competitors class
@@ -8,7 +8,13 @@ class OPS_Analyze_Competitors {
     public function __construct() {
         ?>
         <div class="wrap" id="ops-analyze-competitors">
-            <h2 class="ops-h2">Analyze competitors</h2>
+            <h2 class="ops-h2">Analyze Keyword</h2>
+        <div class="ops-breadcrumbs">
+            <ul>
+                <li><a href="admin.php?page=ops">Dashboard</a> &#8658;</li>
+                <li>Analyze Keyword</li>
+            </ul>
+        </div>
             <div class="postbox ops-padding form-wrapper">
                 <form action="" method="post">
                     <input type="text" name="query" placeholder="Please insert keyword" class="query" />
@@ -50,6 +56,7 @@ class OPS_Analyze_Competitors {
                             $('#ops-analyze-competitors .preloader').html('<img src="<?php echo plugins_url('off-page-seo/img/preloader.GIF') ?>" />');
                         },
                         success: function (data) {
+                            
                             $('#ops-analyze-competitors .results').html(data);
                             $('#ops-analyze-competitors .preloader').html('');
                         },

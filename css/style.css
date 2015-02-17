@@ -32,6 +32,23 @@ h3.ops-h3 {
 h2.ops-h2 {
   margin-bottom: 10px;
 }
+.ops-breadcrumbs {
+  margin-bottom: 20px;
+}
+.ops-breadcrumbs ul {
+  padding: 0;
+  margin: 0;
+}
+.ops-breadcrumbs ul li {
+  margin: 0;
+  float: left;
+  padding: 0 5px 0 0px;
+}
+.ops-breadcrumbs ul:after {
+  content: '';
+  clear: both;
+  display: block;
+}
 .form-wrapper:after {
   content: '';
   clear: both;
@@ -333,14 +350,14 @@ h2.ops-h2 {
 #ops-social-metrics-settings .row {
   padding: 5px 0;
 }
-#ops-knowledge-base ul {
+#ops-knowledge-base .ops-knowledge-base-feed ul {
   margin: 5px 0;
 }
-#ops-knowledge-base ul li a {
+#ops-knowledge-base .ops-knowledge-base-feed ul li a {
   padding: 2px 10px 2px 0;
   display: inline-block;
 }
-#ops-knowledge-base ul li span {
+#ops-knowledge-base .ops-knowledge-base-feed ul li span {
   font-style: italic;
 }
 /*BRANDING*/
@@ -376,5 +393,102 @@ h2.ops-h2 {
 }
 .branding .text .subtext {
   font-size: 18px;
+}
+.backlink-tab {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  min-height: 110px;
+  margin-bottom: 20px;
+}
+.backlink-tab .ops-letter {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  font-size: 146px;
+  font-weight: bold;
+  color: #ececec;
+  pointer-events: none;
+}
+.backlink-tab .right-wrapper {
+  margin-left: 160px;
+}
+.backlink-tab .right-wrapper .customs h3 {
+  margin: 5px 0;
+}
+.backlink-tab .right-wrapper .customs a {
+  display: inline-block;
+  font-size: 14px;
+  padding: 6px 0px;
+}
+.backlink-tab .right-wrapper .explore {
+  float: right;
+  margin: 30px 30px 0 0;
+}
+.ops-dashboard-widget .ops-row {
+  padding: 3px 0;
+  border-bottom: 1px solid #ececec;
+}
+.ops-dashboard-widget .ops-row:after {
+  content: '';
+  clear: both;
+  display: block;
+}
+.ops-dashboard-widget .ops-row .left-col {
+  width: 79%;
+}
+.ops-dashboard-widget .ops-row .left-col .ops-graph-kw {
+  font-size: 14px;
+  font-weight: bold;
+}
+.ops-dashboard-widget .ops-row .left-col .ops-volume {
+  font-size: 10px;
+  font-style: italic;
+}
+.ops-dashboard-widget .ops-row .left-col .ops-graph-url {
+  font-size: 11px;
+}
+.ops-dashboard-widget .ops-row .right-col {
+  width: 20%;
+}
+.ops-dashboard-widget .ops-row .right-col .position {
+  font-size: 11px;
+}
+.ops-dashboard-widget .ops-row .right-col .position strong {
+  font-weight: bold;
+  font-size: 14px;
+  display: block;
+  padding-bottom: 2px;
+}
+.ops-dashboard-widget .ops-schedule {
+  margin-top: 20px;
+  background-color: #f5f5f5;
+  padding: 4px 6px;
+  position: relative;
+}
+.ops-dashboard-widget .ops-schedule strong {
+  position: absolute;
+  right: 6px;
+}
+#ops-guest-blog-outreach label {
+  display: block;
+  padding: 10px 0 2px;
+}
+#ops-guest-blog-outreach label.top {
+  vertical-align: top;
+}
+#ops-guest-blog-outreach input {
+  width: 260px;
+}
+#ops-guest-blog-outreach textarea {
+  width: 100%;
+  height: 150px;
+}
+#ops-widget-backlinks .button {
+  margin-bottom: 3px;
+}
+#ops-widget-backlinks a.learn-more {
+  display: block;
+  padding: 10px 0;
 }
 /*# sourceMappingURL=style.css.map */

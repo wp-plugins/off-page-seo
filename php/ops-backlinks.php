@@ -6,69 +6,126 @@ class OPS_Backlinks {
      * Initialization of PR Submission Class
      * */
     public function __construct() {
+        if (!isset($_GET['subcat'])) {
+            $this->ops_backlinks_main();
+        } elseif ($_GET['subcat'] == 'backlinks_feed') {
+            $this->ops_backlinks_feed();
+        } elseif ($_GET['subcat'] == 'backlinks_comment') {
+            $this->ops_backlinks_comment();
+        } elseif ($_GET['subcat'] == 'backlinks_gb') {
+            $this->ops_backlinks_gb();
+        }
+    }
+
+    public function ops_backlinks_main() {
         $settings = Off_Page_SEO::ops_get_settings();
-
-        /*
-         * Statuses 0 = show all
-         *          1 = show free only
-         *          2 = show paid only
-         */
-        $show = 0;
-        if (isset($_GET['show']) && $_GET['show'] != 0) {
-            $show = sanitize_text_field($_GET['show']);
-        }
-
-        // search
-        $search = '';
-        if (isset($_GET['ops_search']) && $_GET['ops_search'] != '') {
-            $search = sanitize_text_field($_GET['ops_search']);
-        }
-        
-        $type = 'all-types';
-        if (isset($_GET['type']) && $_GET['type'] != '') {
-            $type = sanitize_text_field($_GET['type']);
-        }
-
-        // feed from another site
-        $url = Off_Page_SEO::$mother . '/pr-submissions/?lang=' . $settings['lang'] . '&show=' . $show . '&ops_search=' . $search . '&type=' . $type;
-        $data = ops_curl($url, 1);
         ?>
+        <div class="wrap">
 
-        <!--RENDER-->
-        <div class="wrap" id="ops-pr-submissions">
-            <h2 class="ops-h2">Backlinks</h2>
-            <!--FILTER-->
-            <div class="postbox ops-padding form-wrapper">
-                <form method="get" action="">
-                    Price: 
-                    <select name="show">
-                        <option value="0" <?php echo ($show == 0) ? "selected" : ""; ?>>Show all</option>
-                        <option value="1" <?php echo ($show == 1) ? "selected" : ""; ?>>Show free only</option>
-                        <option value="2" <?php echo ($show == 2) ? "selected" : ""; ?>>Show paid only</option>
-                    </select>
-                    Type: 
-                    <select name="type">
-                        <option value="all-types" <?php echo ($type == 'bookmarks') ? "selected" : ""; ?>>All types</option>
-                        <option value="bookmarks" <?php echo ($type == 'bookmarks') ? "selected" : ""; ?>>Bookmarks</option>
-                        <option value="directory" <?php echo ($type == 'directory') ? "selected" : ""; ?>>Directory</option>
-                        <option value="pr-website" <?php echo ($type == 'pr-website') ? "selected" : ""; ?>>PR Website</option>
-                        <option value="visitor-counter" <?php echo ($type == 'visitor-counter') ? "selected" : ""; ?>>Visitor counter</option>
-                    </select>
-                    <input type="text" name="ops_search" placeholder="Search" value="<?php echo $search ?>" />
-                    <input type="hidden" name="page" value="ops_pr_submissions" />
-                    <input type="submit" value="Apply" class="button button-primary"/>
-                    <span>Language: <?php echo Off_Page_SEO::ops_get_language($settings['lang']);?></span>
-                </form>
+            <h2 class="ops-h2">Backlink Opportunities</h2>
+            <div class="ops-breadcrumbs">
+                <ul>
+                    <li><a href="admin.php?page=ops">Dashboard</a> &#8658;</li>
+                    <li>Backlinks</li>
+                </ul>
             </div>
 
-            <!--FEED-->
-            <div class="remote-feed">
-                <?php echo $data; ?>
+            <div class="backlink-tab postbox ops-padding">
+                <div class="ops-letter">D.</div>
+                <div class="right-wrapper">
+                    <div class="explore">
+                        <a href="admin.php?page=ops_backlinks&subcat=backlinks_feed" class="button button-primary">Explore !</a>
+                    </div>
+                    <div class="customs">
+                        <h3>Our database</h3>
+                        <a href="admin.php?show=0&type=directory&ops_search=&page=ops_backlinks&subcat=backlinks_feed">Directories</a><br/>
+                        <a href="admin.php?show=0&type=pr-website&ops_search=&page=ops_backlinks&subcat=backlinks_feed">PR Websites</a><br/>
+                        <a href="admin.php?show=0&type=bookmarks&ops_search=&page=ops_backlinks&subcat=backlinks_feed">Bookmarks</a><br/>
+                        <a href="admin.php?show=0&type=visitor-counter&ops_search=&page=ops_backlinks&subcat=backlinks_feed">Visitor Counters</a>
+                    </div>
+                </div>
             </div>
+
+
+            <div class="backlink-tab postbox ops-padding">
+                <div class="ops-letter">G.</div>
+                <div class="right-wrapper">
+                    <?php if ($settings['site_info']['guest_posting'] == '1'): ?>
+                        <div class="explore">
+                            <a href="admin.php?page=ops_backlinks&subcat=backlinks_gb" class="button button-primary">Explore !</a>
+                        </div>
+                        <div class="customs">
+                            <h3>Guest Posting</h3>
+                            <p>Start guest posting!</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="explore">
+                            <a target="_blank" href="<?php echo Off_Page_SEO::$mother ?>/add?site_name=<?php echo urlencode(get_bloginfo('name')) ?>&lang=<?php echo $settings['lang'] ?>&site_url=<?php echo urlencode(get_home_url()) ?>&email=<?php echo urlencode(get_option('admin_email')) ?>" class="button button-primary ops-join">Join !</a>
+                        </div>
+                        <div class="customs">
+                            <h3>Guest Posting</h3>
+                            <p>Join Guest Posting network today!</p>
+                            <p><a href="admin.php?page=ops_settings&signed=true&saved=true">Already signed up?</a></p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+
+
+            <div class="backlink-tab postbox ops-padding">
+                <div class="ops-letter">C.</div>
+                <div class="right-wrapper">
+                    <div class="explore">
+                        <a href="admin.php?page=ops_backlinks&subcat=backlinks_comment" class="button button-primary">Comment !</a>
+                    </div>
+                    <div class="customs">
+                        <h3>Comment</h3>
+                        <p>Search for comment opportunitites.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="backlink-tab postbox ops-padding">
+                <div class="ops-letter">B.</div>
+                <div class="right-wrapper">
+                    <div class="explore">
+                        <a href="<?php echo $this->ops_backlinks_buy_link(); ?>" class="button button-primary" target="_blank">Buy backlinks !</a>
+                    </div>
+                    <div class="customs">
+                        <h3>Buy backlinks</h3>
+                        <p>Let other people do SEO for you.</p>
+                        <p><i>Be carefull, bad links can harm you.</i></p>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
-
         <?php
     }
-   
+
+    public function ops_backlinks_feed() {
+        new OPS_Backlinks_Feed();
+    }
+
+    public function ops_backlinks_comment() {
+        new OPS_Backlinks_Comment();
+    }
+
+    public function ops_backlinks_gb() {
+        new OPS_Backlinks_GB();
+    }
+
+    public static function ops_backlinks_buy_link() {
+        $lang = Off_Page_SEO::ops_get_lang();
+        if ($lang == 'cs') {
+            $url = 'http://www.stovkomat.cz/kategorie/zpetne-odkazy?af=czechstudio';
+        } elseif ($lang == 'en') {
+            $url = 'http://tracking.fiverr.com/aff_c?offer_id=1712&aff_id=6020&url_id=190';
+        }
+        return $url;
+    }
+
 }

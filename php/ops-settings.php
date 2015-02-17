@@ -6,6 +6,7 @@ class OPS_Settings {
      * Initialization of Settings Class
      * */
     public function __construct() {
+
         // if we are saving data from form
         if (isset($_POST['null'])) {
             $this->ops_save_settings();
@@ -18,6 +19,13 @@ class OPS_Settings {
                 Settings was updated.
             </div> 
             <?php
+        }
+
+        // check for gust posting
+        if (isset($_GET['signed']) && $_GET['signed'] == 'true') {
+            $settings = Off_Page_SEO::ops_get_settings();
+            $settings['last_check_site_info'] = 0;
+            Off_Page_SEO::ops_update_option('ops_settings', serialize($settings));
         }
 
         // renders settings form
@@ -35,9 +43,14 @@ class OPS_Settings {
         }
 
         // update post meta
-        
         // secure graphs
-        $_POST['graphs'] = $this->ops_sanatize_graphs_input($_POST['graphs']);
+        if (isset($_POST['graphs'])) {
+            $_POST['graphs'] = $this->ops_sanatize_graphs_inputs($_POST['graphs']);
+        }
+        if (isset($_POST['guest_posting'])) {
+            $_POST['guest_posting'] = $this->ops_sanatize_guest_posting_inputs($_POST['guest_posting']);
+        }
+
         $data = serialize($_POST);
         Off_Page_SEO::ops_update_option('ops_settings', $data);
 
@@ -82,9 +95,9 @@ class OPS_Settings {
      * @param type $graphs
      * @return array
      */
-    public function ops_sanatize_graphs_input($graphs){
+    public function ops_sanatize_graphs_inputs($graphs) {
         $n = 0;
-        foreach($graphs as $graph){
+        foreach ($graphs as $graph) {
             $sanatized[$n]['keyword'] = sanitize_text_field($graph['keyword']);
             $sanatized[$n]['url'] = sanitize_text_field($graph['url']);
             $sanatized[$n]['master'] = (isset($graph['master']) ? $graph['master'] : "" );
@@ -93,6 +106,19 @@ class OPS_Settings {
         }
         return $sanatized;
     }
+
+    /**
+     * Sanatize strings given by user
+     * @param type $graphs
+     * @return array
+     */
+    public function ops_sanatize_guest_posting_inputs($guest_posting) {
+        $sanatized['email_subject'] = sanitize_text_field($guest_posting['email_subject']);
+        $sanatized['email_reply'] = sanitize_text_field($guest_posting['email_reply']);
+        $sanatized['email_content'] = $guest_posting['email_content'];
+        return $sanatized;
+    }
+
     /**
      * Render Main Settings Form
      */
@@ -102,6 +128,12 @@ class OPS_Settings {
             <?php $settings = Off_Page_SEO::ops_get_settings(); ?>
 
             <h2 class="ops-h2">Settings</h2>
+            <div class="ops-breadcrumbs">
+                <ul>
+                    <li><a href="admin.php?page=ops">Dashboard</a> &#8658;</li>
+                    <li>Settings</li>
+                </ul>
+            </div>
             <form method="post" action="">
                 <!--HIDDEN FIELD-->
                 <input type="hidden" value="yes" name="null" />
@@ -117,11 +149,13 @@ class OPS_Settings {
                 <input type="hidden" value="<?php echo $settings['site_info']['delicious'] ?>" name="site_info[delicious]" />
                 <input type="hidden" value="<?php echo $settings['site_info']['reddit'] ?>" name="site_info[reddit]" />
                 <input type="hidden" value="<?php echo $settings['site_info']['linkedin'] ?>" name="site_info[linkedin]" />
+                <input type="hidden" value="<?php echo $settings['site_info']['guest_posting'] ?>" name="site_info[guest_posting]" />
 
 
 
                 <!--LEFT COL-->
                 <div class="left-col">
+
                     <div class="postbox">
                         <h3 class="ops-h3">Supported languages</h3>
                         <div class="ops-padding">
@@ -130,6 +164,14 @@ class OPS_Settings {
                                 <?php $languages = Off_Page_SEO::ops_lang_array() ?>
                                 <?php foreach ($languages as $key => $value): ?>
                                     <option value="<?php echo $key ?>" <?php echo ($key == $settings['lang']) ? "selected" : ""; ?>><?php echo $value ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <br/><br/>
+                            <p>Please choose domain</p>
+                            <select name="google_domain" class="select2">
+                                <?php $google_domains = Off_Page_SEO::ops_google_domains_array() ?>
+                                <?php foreach ($google_domains as $key => $value): ?>
+                                    <option value="<?php echo $key ?>" <?php echo ($key == $settings['google_domain']) ? "selected" : ""; ?>><?php echo $value ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -156,7 +198,7 @@ class OPS_Settings {
                                                 <a href="" class="delete-kw">Delete</a>
                                                 <input type="text" name="graphs[<?php echo $n ?>][keyword]" placeholder="Keyword" value="<?php echo $graph['keyword'] ?>" />
                                                 <input type="url" name="graphs[<?php echo $n ?>][url]" placeholder="URL" value="<?php echo $graph['url'] ?>" />
-                                                
+
                                             </div>
                                             <div class="options">
                                                 Keep graph open:
@@ -179,7 +221,7 @@ class OPS_Settings {
                                 <input type="checkbox" name="ops-clear-date" /> Perform test next time user visits the site
                             </div>
                             <div class="max-exec">
-                                Server max execution time is : <b><?php echo ini_get('max_execution_time');?>s</b>, max keywords should be <b><?php echo $this->ops_get_recommended_kws(ini_get('max_execution_time')) ?></b> depending on your position in SERP (if higher, than more).
+                                Server max execution time is : <b><?php echo ini_get('max_execution_time'); ?>s</b>, max keywords should be <b><?php echo $this->ops_get_recommended_kws(ini_get('max_execution_time')) ?></b> depending on your position in SERP (if higher, than more).
                             </div>
                         </div>
                     </div>
@@ -248,6 +290,32 @@ class OPS_Settings {
                         </div>
                     </div>
 
+
+                    <div class="postbox" id="ops-guest-blog-outreach">
+                        <h3 class="ops-h3">Guest Posting Outreach</h3>
+                        <div class="ops-padding">
+                            <div class="row">
+                                <label for="guest_posting[email_subject]">
+                                    Email Subject:
+                                </label>
+                                <input name="guest_posting[email_subject]" type="text" value="<?php echo (isset($settings['guest_posting']['email_subject'])) ? $settings['guest_posting']['email_subject'] : ""; ?>" />
+                            </div>
+                            <div class="row">
+                                <label for="guest_posting[email_reply]">
+                                    Reply to:
+                                </label>
+                                <input name="guest_posting[email_reply]" type="email" value="<?php echo (isset($settings['guest_posting']['email_reply'])) ? $settings['guest_posting']['email_reply'] : ""; ?>" />
+                            </div>
+                            <div class="row">
+                                <label for="guest_posting[email_content]" class="top">
+                                    Outreach email: 
+                                </label>
+                                <textarea name="guest_posting[email_content]"><?php echo (isset($settings['guest_posting']['email_content'])) ? $settings['guest_posting']['email_content'] : ""; ?></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
 
 
@@ -258,8 +326,8 @@ class OPS_Settings {
         <script>
             jQuery(document).ready(function ($) {
 
-                $('select[name=lang]').select2();
-                
+                $('select[name=lang], .select2').select2();
+
                 $('body').on('click', '#ops-rank-reporter-settings .delete-kw', function (e) {
                     e.preventDefault();
                     $(this).closest('.ops-new-kw-wrapper').remove();
@@ -282,16 +350,17 @@ class OPS_Settings {
         <?php
     }
 
-    public function ops_get_recommended_kws($time){
-        if($time < 45){
+    public function ops_get_recommended_kws($time) {
+        if ($time < 45) {
             $return = "7-12";
         } elseif ($time < 80) {
             $return = "10-15";
-        } elseif($time < 120) {
+        } elseif ($time < 120) {
             $return = "14-20";
         } else {
             $return = "> 20";
         }
         return $return;
     }
+
 }

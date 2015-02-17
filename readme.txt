@@ -3,8 +3,8 @@ Contributors: proka
 Stable tag: trunk
 Plugin URI: http://www.offpageseoplugin.com/
 Description: Gives you tools to build better SEO.
-Version: 1.0.0.
-Tags: seo, off page, backlinks, serp, google, rank reporter, rank checker, rank
+Version: 1.1.0.
+Tags: seo, off page, backlinks, serp, google, rank reporter, rank checker, rank, guest posting, guest blogging
 Tested up to: 4.1.0
 Requires at least: 3.0.1
 Author: Jakub Glos
@@ -23,13 +23,15 @@ Let's build better websites with Off Page SEO plugin!
 * Social Share counter (counts how many likes, follows you have)
 * Page and Alexa Rank Checker (every day checks if there was a change in PR or AlexaRank)
 * Backlink opportunitites (daily update backlink opportunities)
+* Guest posting (join guest posting network)
 * Commenting opportunitites (search where you can post your comment)
 * Knowledge Base (new articles every day)
+* Dashboard Widgets (rank reporter, backlink tools)
 
 = Supported languages =
-Plugin itself supports all languages - search results, rank reports.
+Plugin supports all languages - search results, rank reports.
 
-For backlinks and commenting opportunities we currently supports languages bellow. You are most welcome to help us developing this plugin.
+For backlinks and commenting opportunities we currently supports languages listed bellow. You are most welcome to help us developing this plugin.
 
 * English 
 * Czech
@@ -53,6 +55,8 @@ Installation
 
 == Changelog ==
 
+= 1.1.0. =
+* Lot of new features added - guest posting, dashboard widgets, other link opportunitites
 
 = 1.0.0. =
 * Initial release of the plugin.

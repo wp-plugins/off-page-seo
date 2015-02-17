@@ -1,6 +1,6 @@
 <?php
 
-class OPS_Commenting {
+class OPS_Backlinks_Comment {
 
     /**
      * Initialization of Commenting class
@@ -8,7 +8,14 @@ class OPS_Commenting {
     public function __construct() {
         ?>
         <div class="wrap" id="ops-commenting">
-            <h2 class="ops-h2">Commenting</h2>
+            <h2 class="ops-h2">Comment</h2>
+            <div class="ops-breadcrumbs">
+                <ul>
+                    <li><a href="admin.php?page=ops">Dashboard</a> &#8658;</li>
+                    <li><a href="admin.php?page=ops_backlinks">Backlinks</a> &#8658;</li>
+                    <li>Comment</li>
+                </ul>
+            </div>
             <div class="postbox ops-padding form-wrapper">
                 <form action="" method="post">
                     <input type="text" name="query" placeholder="Please insert keyword" class="query" />
