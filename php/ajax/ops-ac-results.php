@@ -1,4 +1,5 @@
 <?php
+require_once('../../../../../wp-load.php');
 require_once('../tools/alexarank.php');
 require_once('../tools/pagerank.php');
 require_once('../tools/simple-html-dom.php');
@@ -13,7 +14,6 @@ $n = 1;
 $url = 'http://www.google.'.$settings['google_domain'].'/search?hl=' . $_POST["lang"] . '&start=0&q=' . urlencode($_POST['query']) . '&num=20';
 $str = ops_curl($url);
 $html = str_get_html($str);
-
 $linkObjs = $html->find('h3.r a');
 
 foreach ($linkObjs as $linkObj) {

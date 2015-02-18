@@ -1,4 +1,5 @@
 <?php
+require_once('../../../../../wp-load.php');
 require_once('../tools/pagerank.php');
 require_once('../tools/simple-html-dom.php');
 require_once('../ops-backlinks-comment.php');
