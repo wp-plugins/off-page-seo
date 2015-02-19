@@ -4,21 +4,24 @@
   Plugin Name: Off Page SEO
   Plugin URI: http://www.offpageseoplugin.com
   Description: Gives you tools to boost your SEO.
-  Version: 1.1.1.
+  Version: 1.1.2.
   Author: Jakub Glos
   Author URI: http://www.offpageseoplugin.com
   License:
   Text Domain: off-page-seo
  */
 
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(-1);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(-1);
 
 // no need on cron job
 if (defined('DOING_CRON') || isset($_GET['doing_wp_cron'])) {
     return;
 }
+// don't call the file directly
+if (!defined('ABSPATH'))
+    return;
 
 /*
  * Include Classes
@@ -71,9 +74,9 @@ if (isset($_GET['update_positions']) && $_GET['update_positions'] == 'do_it') {
 /*
  * Install
  */
-register_activation_hook(__FILE__, 'on_activate');
+register_activation_hook(__FILE__, 'ops_on_activate');
 
-function on_activate() {
+function ops_on_activate() {
     /*
      * Insert database table
      */
@@ -112,6 +115,7 @@ function on_activate() {
                 'linkedin' => 0
             ),
             'lang' => 'en',
+            'google_domain' => 'com',
             'donate' => 'on',
             'google_domain' => 'com',
             'show' => array(

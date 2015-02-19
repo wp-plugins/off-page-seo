@@ -29,7 +29,7 @@ $q = urlencode($q);
 
 
 // get results
-$start = $n * 10;
+
 $url = 'http://www.google.'.$settings['google_domain'].'/search?hl=' . $_POST['lang'] . '&q=' . $q . '&num=30';
 
 $str = ops_curl($url);
@@ -70,7 +70,7 @@ if ($html) {
 }
 ?>
 
-<?php if ($results): ?>
+<?php if (isset($results)): ?>
     <!--RENDER RESULTS-->
     <meta http-equiv="content-Type" content="text/html; charset=utf-8"/>
     <div class="ops-com-results">
@@ -116,14 +116,14 @@ if ($html) {
             <?php $r++ ?>
         <?php endforeach ?>
         <div class="more-results">
-            <a href="<?php echo $url ?>" class="button button-primary" target="_blank">More results on Google</a>
+            <a href="<?php echo $url ?>&start=30" class="button button-primary" target="_blank">More results on Google</a>
         </div>
 
     </div>
 <?php else : ?>
     <div class="ops-com-results">
         <div class="error-message">
-            Ops. You've been temporarily marked as bot. You can still see results on Google.
+            Ops. You've been temporarily marked as bot for this query. Try another one or see results on Google directly using link bellow.
         </div>
         <div class="more-results">
             <a href="<?php echo $url ?>" class="button button-primary" target="_blank">See results on Google</a>

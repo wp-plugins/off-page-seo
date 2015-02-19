@@ -3,7 +3,7 @@ Contributors: proka
 Stable tag: trunk
 Plugin URI: http://www.offpageseoplugin.com/
 Description: Gives you tools to build better SEO.
-Version: 1.1.1.
+Version: 1.1.2.
 Tags: seo, off page, backlinks, serp, google, rank reporter, rank checker, rank, guest posting, guest blogging
 Tested up to: 4.1.0
 Requires at least: 3.0.1
@@ -54,6 +54,9 @@ Installation
 4. Knowledge Base of most interesting articles found on internet
 
 == Changelog ==
+
+= 1.1.2. =
+* Bug fixes, file_get_conents replaced with curl
 
 = 1.1.1. =
 * Analyze competitor tool bug fix

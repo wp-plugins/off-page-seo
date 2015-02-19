@@ -14,7 +14,9 @@ class OPS_Rank_Reporter {
             $this->ops_render_positions($settings);
         } else {
             // if we don't have any graphs yet
-            echo "You don't have any keyword set to test";
+            ?>
+            <a href="admin.php?page=ops_settings">Please set up keywords and language in settings.</a>
+            <?php
         }
     }
 
@@ -234,7 +236,7 @@ class OPS_Rank_Reporter {
         $n = 1;
         $position = 100;
 
-        $url = 'http://www.google.'.$settings['google_domain'].'/search?hl=' . $settings['lang'] . '&start=0&q=' . urlencode($keyword) . '&num=100&pws=0&adtest=off';
+        $url = 'http://www.google.' . $settings['google_domain'] . '/search?hl=' . $settings['lang'] . '&start=0&q=' . urlencode($keyword) . '&num=100&pws=0&adtest=off';
         $str = ops_curl($url);
         $html = str_get_html($str);
         $linkObjs = $html->find('h3.r a');

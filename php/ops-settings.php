@@ -17,6 +17,7 @@ class OPS_Settings {
             ?>
             <div class="updated" style="padding: 8px 20px;">
                 Settings was updated.
+                
             </div> 
             <?php
         }
@@ -126,7 +127,6 @@ class OPS_Settings {
         ?>
         <div class="wrap" id="ops-settings">
             <?php $settings = Off_Page_SEO::ops_get_settings(); ?>
-
             <h2 class="ops-h2">Settings</h2>
             <div class="ops-breadcrumbs">
                 <ul>
@@ -159,7 +159,7 @@ class OPS_Settings {
                     <div class="postbox">
                         <h3 class="ops-h3">Supported languages</h3>
                         <div class="ops-padding">
-                            <p>Please choose your language.</p>
+                            <p>Please select your language.</p>
                             <select name="lang">
                                 <?php $languages = Off_Page_SEO::ops_lang_array() ?>
                                 <?php foreach ($languages as $key => $value): ?>
@@ -167,7 +167,7 @@ class OPS_Settings {
                                 <?php endforeach; ?>
                             </select>
                             <br/><br/>
-                            <p>Please choose domain</p>
+                            <p>Please select google domain you want to search in.</p>
                             <select name="google_domain" class="select2">
                                 <?php $google_domains = Off_Page_SEO::ops_google_domains_array() ?>
                                 <?php foreach ($google_domains as $key => $value): ?>
@@ -294,6 +294,7 @@ class OPS_Settings {
                     <div class="postbox" id="ops-guest-blog-outreach">
                         <h3 class="ops-h3">Guest Posting Outreach</h3>
                         <div class="ops-padding">
+                            This email will be automatically send to the owner of blog you want to reach.
                             <div class="row">
                                 <label for="guest_posting[email_subject]">
                                     Email Subject:
@@ -308,7 +309,7 @@ class OPS_Settings {
                             </div>
                             <div class="row">
                                 <label for="guest_posting[email_content]" class="top">
-                                    Outreach email: 
+                                    Content of email:
                                 </label>
                                 <textarea name="guest_posting[email_content]"><?php echo (isset($settings['guest_posting']['email_content'])) ? $settings['guest_posting']['email_content'] : ""; ?></textarea>
                             </div>

@@ -72,7 +72,7 @@ class OPS_Dashboard_Widget_Reporter {
                     Next scheduled check: <strong><?php echo date('F d, Y H:i:s', $settings['last_check'] + 259200); ?></strong>
                 </div>
             <?php else: ?>
-                Please set keywords in settings.
+                <a href="admin.php?page=ops_settings">Please set up keywords and language in settings.</a>
             <?php endif; ?>
         </div>
         <?php

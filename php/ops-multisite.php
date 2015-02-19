@@ -25,6 +25,7 @@ class OPS_Multisite {
                     'linkedin' => 0
                 ),
                 'lang' => 'en',
+                'google_domain' => 'com',
                 'donate' => 'on',
                 'show' => array(
                     'page_rank' => 'on',

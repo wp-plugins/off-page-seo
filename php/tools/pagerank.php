@@ -4,9 +4,38 @@ if (!class_exists('Page_Rank')):
 
     class Page_Rank {
 
+        function ops_pr_curl($url, $show = 0, $retry = 0) {
+            if ($retry > 5) {
+                print "Maximum 5 retries are done, skipping!\n";
+                return "in loop!";
+            }
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0');
+            if ($show == 0) {
+                curl_setopt($ch, CURLOPT_HEADER, TRUE);
+            }
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_REFERER, 'http://www.google.com/');
+            curl_setopt($ch, CURLOPT_COOKIEFILE, "./cookie.txt");
+            curl_setopt($ch, CURLOPT_COOKIEJAR, "./cookie.txt");
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            // handling the follow redirect
+            if (preg_match("|Location: (https?://\S+)|", $result, $m)) {
+                return ops_curl($m[1], $show, $retry + 1);
+            }
+
+            // add another condition here if the location is like Location: /home/products/index.php
+            return $result;
+        }
+
         public function get_google_pagerank($url) {
             $query = "http://toolbarqueries.google.com/tbr?client=navclient-auto&ch=" . $this->CheckHash($this->HashURL($url)) . "&features=Rank&q=info:" . $url . "&num=100&filter=0";
-            $data = file_get_contents($query);
+            $data = $this->ops_pr_curl($query);
             $pos = strpos($data, "Rank_");
             if ($pos === false) {
                 $pagerank_go = 0;
@@ -70,6 +99,8 @@ if (!class_exists('Page_Rank')):
         }
 
     }
+
+    
 
     
 endif;

@@ -32,6 +32,7 @@ class OPS_Dashboard_Widget_Backlinks {
                 <a href="<?php echo OPS_Backlinks::ops_backlinks_buy_link(); ?>" target="_blank" class="button button-primary">Buy backlinks</a>
                 
                 <a href="admin.php?page=ops_knowledge_base" class="learn-more">Learn more about SEO.</a>
+                <a href="admin.php?page=ops_analyze_keyword" class="learn-more">Start analyzing competitors.</a>
             </div>
         </div>
         <?php
