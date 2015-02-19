@@ -11,9 +11,9 @@
   Text Domain: off-page-seo
  */
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(-1);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(-1);
 
 // no need on cron job
 if (defined('DOING_CRON') || isset($_GET['doing_wp_cron'])) {
