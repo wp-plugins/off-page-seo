@@ -33,7 +33,7 @@ class OPS_Dashboard {
         ?>
 
         <div class="postbox">
-            <h3 class="ops-h3">Your Site's informations</h3>
+            <h3 class="ops-h3">Your site's information</h3>
             <div class="inside ops-padding">
 
                 <?php if (isset($settings['show']['page_rank']) && $settings['show']['page_rank'] == 'on'): ?>
@@ -182,11 +182,11 @@ class OPS_Dashboard {
             ?>
             <div id="ops-donate">
                 <div class="enjoying">
-                    Enjoying plugin?
+                    Enjoying this plugin?
                 </div>
                 <div class="help">
                     We want your <a href="mailto:info@offpageseoplugin.com">feedback</a>!<br/>
-                    Help us buy new spaceship.
+                    Help us buy a new spaceship.
                 </div>
                 <div class="dont-bother">
                     <a href="admin.php?page=ops_settings">Don't bother me.</a>

@@ -64,7 +64,7 @@ class OPS_Backlinks {
                         </div>
                         <div class="customs">
                             <h3>Guest Posting</h3>
-                            <p>Join Guest Posting network today!</p>
+                            <p>Join the Guest Posting Network today!</p>
                             <p><a href="admin.php?page=ops_settings&signed=true&saved=true">Already signed up?</a></p>
                         </div>
                     <?php endif; ?>
@@ -81,7 +81,7 @@ class OPS_Backlinks {
                     </div>
                     <div class="customs">
                         <h3>Comment</h3>
-                        <p>Search for comment opportunitites.</p>
+                        <p>Search for new comment opportunities.</p>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@ class OPS_Backlinks {
                     <div class="customs">
                         <h3>Buy backlinks</h3>
                         <p>Let other people do SEO for you.</p>
-                        <p><i>Be carefull, bad links can harm you.</i></p>
+                        <p><i>Be careful, bad links can harm you.</i></p>
                     </div>
                 </div>
             </div>

@@ -35,7 +35,7 @@ class OPS_Backlinks_Comment {
             <div class="postbox results">
                 <div class="branding branding-comments">
                     <div class="text">
-                        Search opportunities to post a comment.
+                        Search for opportunities to post a comment.
                         <div class="subtext">
                             Every buzz is a good thing.
                         </div>

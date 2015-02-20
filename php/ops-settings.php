@@ -16,7 +16,7 @@ class OPS_Settings {
         if (isset($_GET['saved']) && $_GET['saved'] == true) {
             ?>
             <div class="updated" style="padding: 8px 20px;">
-                Settings was updated.
+                Settings were updated.
                 
             </div> 
             <?php
@@ -167,7 +167,7 @@ class OPS_Settings {
                                 <?php endforeach; ?>
                             </select>
                             <br/><br/>
-                            <p>Please select google domain you want to search in.</p>
+                            <p>Please select the Google domain you want to search in.</p>
                             <select name="google_domain" class="select2">
                                 <?php $google_domains = Off_Page_SEO::ops_google_domains_array() ?>
                                 <?php foreach ($google_domains as $key => $value): ?>
@@ -180,7 +180,7 @@ class OPS_Settings {
                     <div class="postbox" id="ops-rank-reporter-settings">
                         <h3 class="ops-h3">Rank Reporter</h3>
                         <div class="ops-padding">
-                            <p>Please set keywords and URL you want to be reported.</p>
+                            <p>Please enter the keywords and URLs that you want the report on.</p>
                             <?php
                             if (isset($settings['graphs'])) {
                                 $number = count($settings['graphs']);
@@ -201,8 +201,6 @@ class OPS_Settings {
 
                                             </div>
                                             <div class="options">
-                                                Keep graph open:
-                                                <input type="checkbox" name="graphs[<?php echo $n ?>][open]" <?php echo (isset($graph['open']) && $graph['open'] == 'on') ? "checked" : ""; ?> />
                                                 Show in master graph:
                                                 <input type="checkbox" name="graphs[<?php echo $n ?>][master]" <?php echo (isset($graph['master']) && $graph['master'] == 'on') ? "checked" : ""; ?> />
                                                 Search volume:
@@ -215,13 +213,13 @@ class OPS_Settings {
                             </div>
                             <a href="#" class="button add-new-kw">Add new</a>
                             <div class="ops-delete">
-                                <input type="checkbox" name="ops-delete-reports" /> Delete all reports
+                                <input type="checkbox" name="ops-delete-reports" /> Delete all reports.
                             </div>
                             <div class="ops-delete">
-                                <input type="checkbox" name="ops-clear-date" /> Perform test next time user visits the site
+                                <input type="checkbox" name="ops-clear-date" /> Perform ranking test next time the user visits your site <i>(don't use frequently)</i>. 
                             </div>
                             <div class="max-exec">
-                                Server max execution time is : <b><?php echo ini_get('max_execution_time'); ?>s</b>, max keywords should be <b><?php echo $this->ops_get_recommended_kws(ini_get('max_execution_time')) ?></b> depending on your position in SERP (if higher, than more).
+                                Max server execution time : <b><?php echo ini_get('max_execution_time'); ?>s</b>, max number of keywords should be <b><?php echo $this->ops_get_recommended_kws(ini_get('max_execution_time')) ?></b> depending on your ranking in SERP (use more, if higher).
                             </div>
                         </div>
                     </div>
@@ -230,7 +228,7 @@ class OPS_Settings {
                     <div class="postbox" id="ops-donate-box-settings">
                         <h3 class="ops-h3">Donate Box</h3>
                         <div class="ops-padding">
-                            <p>If you don't want to support us or you already did (thank you!), you can hide donation message.</p>
+                            <p>If you don't want to support us or you have already (thank you!), you can hide the donation message.</p>
                             <input type="checkbox" name="donate" <?php echo (isset($settings['donate']) && $settings['donate'] == 'on') ? "checked='checked'" : ""; ?>/>
                         </div>
                     </div>
@@ -294,7 +292,7 @@ class OPS_Settings {
                     <div class="postbox" id="ops-guest-blog-outreach">
                         <h3 class="ops-h3">Guest Posting Outreach</h3>
                         <div class="ops-padding">
-                            This email will be automatically send to the owner of blog you want to reach.
+                            This email will be sent automatically to the owner of the blog you want to reach.
                             <div class="row">
                                 <label for="guest_posting[email_subject]">
                                     Email Subject:
@@ -309,7 +307,7 @@ class OPS_Settings {
                             </div>
                             <div class="row">
                                 <label for="guest_posting[email_content]" class="top">
-                                    Content of email:
+                                    Contents of email:
                                 </label>
                                 <textarea name="guest_posting[email_content]"><?php echo (isset($settings['guest_posting']['email_content'])) ? $settings['guest_posting']['email_content'] : ""; ?></textarea>
                             </div>
@@ -344,7 +342,7 @@ class OPS_Settings {
                     var numberGraphs = $('#ops-rank-reporter-settings .ops-wrapper').data('number', newNumberGraphs);
 
                     // append
-                    $('#ops-rank-reporter-settings .ops-wrapper').append('<div class="ops-new-kw-wrapper"><div class="row"><a href="" class="delete-kw">Delete</a><input type="text" name="graphs[' + newNumberGraphs + '][keyword]" placeholder="Keyword" /><input type="text" name="graphs[' + newNumberGraphs + '][url]" placeholder="URL" /></div><div class="options">Keep graph open<input type="checkbox" name="graphs[' + newNumberGraphs + '][open]" />Show in master graph<input type="checkbox" name="graphs[' + newNumberGraphs + '][master]" />Search volume:<input type="text" name="graphs[' + newNumberGraphs + '][volume]" placeholder="Volume" value="" class="ops-volume" /></div></div>');
+                    $('#ops-rank-reporter-settings .ops-wrapper').append('<div class="ops-new-kw-wrapper"><div class="row"><a href="" class="delete-kw">Delete</a><input type="text" name="graphs[' + newNumberGraphs + '][keyword]" placeholder="Keyword" /><input type="text" name="graphs[' + newNumberGraphs + '][url]" placeholder="URL" /></div>Show in master graph<input type="checkbox" name="graphs[' + newNumberGraphs + '][master]" />Search volume:<input type="text" name="graphs[' + newNumberGraphs + '][volume]" placeholder="Volume" value="" class="ops-volume" /></div></div>');
                 });
             });
         </script>

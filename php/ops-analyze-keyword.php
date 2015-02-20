@@ -28,9 +28,9 @@ class OPS_Analyze_Keyword {
             <div class="postbox results">
                 <div class="branding branding-ac">
                     <div class="text">
-                        Analyze your competitors using most popular SEO tools
+                        Analyze your competitors using the most popular SEO tools
                         <div class="subtext">
-                            and get similar high autority backlinks.
+                            and get similar high authority backlinks.
                         </div>
 
                     </div>

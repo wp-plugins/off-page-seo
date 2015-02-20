@@ -2,7 +2,7 @@
 Contributors: proka
 Stable tag: trunk
 Plugin URI: http://www.offpageseoplugin.com/
-Description: Gives you tools to build better SEO.
+Description: Turn your WordPress site into the ultimate SEO tool! Monitor SERP progress, get backlinks, join the guest posting network, analyze competitors, and much more.
 Version: 1.1.2.
 Tags: seo, off page, backlinks, serp, google, rank reporter, rank checker, rank, guest posting, guest blogging
 Tested up to: 4.1.0
@@ -11,7 +11,7 @@ Author: Jakub Glos
 Author URI: http://www.offpageseoplugin.com/
 License: GPLv2
 
-Provide you tools to build your Off Page SEO, get backlinks and monitor progress.
+Turn your WordPress site into the ultimate SEO tool! Monitor SERP progress, get backlinks, join the guest posting network, analyze competitors, and much more.
 
 == Description ==
 
@@ -19,19 +19,20 @@ Let's build better websites with Off Page SEO plugin!
 
 = Features =
 * Rank Reporter (checks rank in SERP every 3 days)
-* Competitor Analysis (uses most popupar tools in the world)
-* Social Share counter (counts how many likes, follows you have)
-* Page and Alexa Rank Checker (every day checks if there was a change in PR or AlexaRank)
-* Backlink opportunitites (daily update backlink opportunities)
-* Guest posting (join guest posting network)
-* Commenting opportunitites (search where you can post your comment)
+* Competitor Analysis (using the most popular tools in the world)
+* Social Share counter (counts how many Likes and Follows you have on various social networks)
+* Page and Alexa Rank Checker (checks every day for a change in PR or Alexa Rank)
+* Backlink opportunities (daily update of backlink opportunities)
+* Guest posting (join the guest posting network)
+* Comment opportunities (search for where you can post your comments)
 * Knowledge Base (new articles every day)
-* Dashboard Widgets (rank reporter, backlink tools)
+* Dashboard Widgets (rank reporting and quick access to all tools plugin offers)
+
 
 = Supported languages =
-Plugin supports all languages - search results, rank reports.
+Plugin supports all languages for search results, rank reports, guest posting.
 
-For backlinks and commenting opportunities we currently supports languages listed bellow. You are most welcome to help us developing this plugin.
+For backlinks and commenting opportunities we currently support the languages listed bellow. You are most welcome to help us with developing this plugin.
 
 * English 
 * Czech
@@ -40,10 +41,10 @@ For backlinks and commenting opportunities we currently supports languages liste
 
 Installation
 
-1) Download and install plugin.
-2) Set up keywords in Settings.
-3) Set up social metrics you want to follow.
-4) Enjoy other tools!
+1. Download and install plugin.
+2. Specify the keywords in Settings.
+3. Specify the social metrics you want to follow.
+4. Enjoy other tools!
 
 == Frequently Asked Questions ==
 

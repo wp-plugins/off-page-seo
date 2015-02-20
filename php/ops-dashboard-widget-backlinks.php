@@ -22,7 +22,7 @@ class OPS_Dashboard_Widget_Backlinks {
                 <?php if ($settings['site_info']['guest_posting'] == '1'): ?>
                     <a href="admin.php?page=ops_backlinks&subcat=backlinks_gb" class="button button-primary">Guest Posting</a>
                 <?php else: ?>
-                    <a target="_blank" href="<?php echo Off_Page_SEO::$mother ?>/add?site_name=<?php echo urlencode(get_bloginfo('name')) ?>&lang=<?php echo $settings['lang'] ?>&site_url=<?php echo urlencode(get_home_url()) ?>&email=<?php echo urlencode(get_option('admin_email')) ?>" class="button button-primary">Join Guest Posting Network</a>
+                    <a target="_blank" href="<?php echo Off_Page_SEO::$mother ?>/add?site_name=<?php echo urlencode(get_bloginfo('name')) ?>&lang=<?php echo $settings['lang'] ?>&site_url=<?php echo urlencode(get_home_url()) ?>&email=<?php echo urlencode(get_option('admin_email')) ?>" class="button button-primary">Join the Guest Posting Network</a>
                 <?php endif; ?>
 
                 <!--COMMENTING-->
