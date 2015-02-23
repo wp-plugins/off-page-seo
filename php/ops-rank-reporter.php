@@ -191,7 +191,7 @@ class OPS_Rank_Reporter {
                                 <?php echo $graph['url'] ?>
                             </div>
                             <div class="ops-show-backlinks">
-                                <a href="#" class="button">Backlinks (<?php echo $this->ops_count_backlinks($row_id) ?>)</a> 
+                                <a href="#" class="button">Backlinks (<?php echo $this->ops_count_backlinks($row_id)  ?>)</a> 
                             </div>
                             <div class="ops-backlinks-list" style="display:none;">
                                 <?php $this->ops_render_backlinks($row_id); ?>
@@ -393,7 +393,11 @@ class OPS_Rank_Reporter {
         global $wpdb;
         $row = $wpdb->get_row("SELECT * FROM " . $wpdb->base_prefix . "ops_rank_report WHERE id = '" . $id . "'", ARRAY_A);
         $links = unserialize($row['links']);
-        return count($links);
+        if (is_array($links)) {
+            return count($links);
+        } else {
+            return 0;
+        }
     }
 
     public static function ops_update_backlinks_db($data, $id) {
