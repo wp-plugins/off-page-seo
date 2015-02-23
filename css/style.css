@@ -268,9 +268,66 @@ h2.ops-h2 {
 .ops-kw-graph-wrapper:last-of-type .ops-kw-wrapper {
   border-bottom: 0px solid #ececec;
 }
+.ops-kw-graph-wrapper .ops-show-backlinks {
+  line-height: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list form.ops-backlink-edit input.ops-url {
+  width: 55%;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list form.ops-backlink-edit select.ops-type {
+  width: 10%;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list form.ops-backlink-edit input.ops-price {
+  width: 10%;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list form.ops-backlink-edit input.ops-date {
+  width: 10%;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list .ops-add-new-link {
+  line-height: 27px;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list .ops-dash-edit-mode {
+  display: inline-block;
+  margin-top: 5px;
+  font-weight: bold;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list .single-backlink {
+  padding: 4px 5px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #d7d7d7;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list .single-backlink:after {
+  content: '';
+  clear: both;
+  display: block;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list .single-backlink .link {
+  float: left;
+  width: 60%;
+  overflow: hidden;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list .single-backlink .type {
+  float: left;
+  width: 13%;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list .single-backlink .price {
+  float: left;
+  width: 8%;
+}
+.ops-kw-graph-wrapper .ops-backlinks-list .single-backlink .date {
+  float: left;
+  width: 19%;
+}
 .ops-kw-graph-wrapper .ops-kw-wrapper {
-  min-height: 55px;
+  min-height: 70px;
   border-bottom: 1px solid #ececec;
+}
+.ops-kw-graph-wrapper .ops-kw-wrapper:after {
+  content: '';
+  clear: both;
+  display: block;
 }
 .ops-kw-graph-wrapper .ops-kw-wrapper:hover {
   background-color: #f9f9f9;

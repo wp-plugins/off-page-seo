@@ -87,7 +87,6 @@ class OPS_Rank_Reporter {
                                 height: 400,
                                 chartArea: {left: 80, top: 20, 'width': '90%', 'height': '70%'},
                                 pointShape: 'circle'};
-
                     var chart = new google.visualization.LineChart(document.getElementById('master-graph'));
                     chart.draw(data, options);
                 }
@@ -105,12 +104,72 @@ class OPS_Rank_Reporter {
         <div class = "postbox">
             <h3 class = "ops-h3">Rank Checker</h3>
             <script type = "text/javascript" src = "https://www.google.com/jsapi"></script>
+            <script>
+                jQuery(document).ready(function ($) {
+                    $('body').on('click', '.ops-dash-edit-mode', function (e) {
+                        e.preventDefault();
+                        var thisObj = $(this);
+                        var rowId = $(this).data('rowid');
+                        $.ajax({
+                            url: '<?php echo plugins_url('off-page-seo/php/ajax/ops-edit-mode-load.php') ?>',
+                            type: "POST",
+                            data: {rowId: rowId},
+                            success: function (data) {
+                                $(thisObj).parent().html(data);
+                            },
+                            error: function () {
+                            }
+                        });
+                    });
 
+
+                    $('body').on('submit', 'form.ops-backlink-edit', function (e) {
+                        e.preventDefault();
+                        var thisObj = $(this);
+                        var postData = $(this).serializeArray();
+                        $.ajax({
+                            url: '<?php echo plugins_url('off-page-seo/php/ajax/ops-edit-mode-save.php') ?>',
+                            type: "POST",
+                            data: postData,
+                            success: function (data) {
+                                $(thisObj).parent().html(data);
+                            },
+                            error: function () {
+                            }
+                        });
+                    });
+
+
+                    $('body').on('click', '.ops-add-new-link', function (e) {
+                        e.preventDefault();
+                        var allId = $(this).closest('form').data('count');
+                        var newId = allId++;
+                        $(this).closest('form').data('count', allId);
+                        $(this).parent().prepend('<div class="ops-link-wrap"><input type="text" name="links[' + allId + '][url]" class="ops-url" placeholder="URL" /><select name="links[' + allId + '][type]" class="ops-type"><option value="backlink">Backlink</option><option value="article">Article</option><option value="comment">Comment</option></select><input type="text" name="links[' + allId + '][price]" class="ops-price" placeholder="Price" /><select name="links[' + allId + '][date]" class="ops-date" ><option value="today">Today</option><option value="yesterday">Yesterday</option><option value="three-days-ago">3 days ago</option><option value="week-ago">Week ago</option></select><button class="ops-delete-link">x</button></div>');
+                    });
+
+
+
+                    $('body').on('click', 'button.ops-delete-link', function (e) {
+                        e.preventDefault();
+                        $(this).parent().empty();
+                    });
+
+                    $('.ops-show-backlinks').click(function () {
+                        if ($(this).parent().find('.ops-backlinks-list').hasClass('ops-open') === false) {
+                            $(this).parent().find('.ops-backlinks-list').addClass('ops-open').slideDown();
+                        } else {
+                            $(this).parent().find('.ops-backlinks-list').removeClass('ops-open').slideUp();
+                        }
+                    });
+
+                });</script>
             <?php
             foreach ($settings['graphs'] as $graph) {
 
                 // set positions
                 $positions = $this->ops_get_positions($graph['url'], $graph['keyword']);
+                $row_id = $this->ops_get_row_id($graph['url'], $graph['keyword']);
                 ?>
 
                 <div class="ops-kw-graph-wrapper">
@@ -130,6 +189,13 @@ class OPS_Rank_Reporter {
                             </div>
                             <div class="ops-graph-url">
                                 <?php echo $graph['url'] ?>
+                            </div>
+                            <div class="ops-show-backlinks">
+                                <a href="#" class="button">Backlinks (<?php echo $this->ops_count_backlinks($row_id) ?>)</a> 
+                            </div>
+                            <div class="ops-backlinks-list" style="display:none;">
+                                <?php $this->ops_render_backlinks($row_id); ?>
+                                <a href="#" class="ops-dash-edit-mode" data-rowid="<?php echo $row_id ?>">Edit mode</a>
                             </div>
                         </div>
                         <div class="right-col">
@@ -173,15 +239,15 @@ class OPS_Rank_Reporter {
                             <!--SCRIPT-->
                             <script type="text/javascript">
 
-                google.load("visualization", "1.1", {packages: ["corechart"]});
-                google.setOnLoadCallback(drawChart);
-                function drawChart() {
-                    var data = google.visualization.arrayToDataTable
-                            ([['Date', 'Position'],
+                                google.load("visualization", "1.1", {packages: ["corechart"]});
+                                google.setOnLoadCallback(drawChart);
+                                function drawChart() {
+                                    var data = google.visualization.arrayToDataTable
+                                            ([['Date', 'Position'],
                 <?php $i = 0; ?>
                 <?php foreach ($positions as $position): ?>
                     <?php $time = date('Y, m, d, H, i', $position['time']); ?>
-                                [new Date(<?php echo $time ?>), <?php echo $position['position'] ?>],
+                                                [new Date(<?php echo $time ?>), <?php echo $position['position'] ?>],
                     <?php
                     $i++;
                     if ($i == 15) {
@@ -189,25 +255,24 @@ class OPS_Rank_Reporter {
                     }
                     ?>
                 <?php endforeach; ?>
-                            ]);
-                            var options = {
-                                legend: 'none',
-                                vAxis: {
-                                    title: "Position",
-                                    viewWindowMode: 'explicit',
-                                    viewWindow: {
-                                        min: 1
-                                    },
-                                    direction: -1
-                                },
-                                pointSize: 10,
-                                height: 400,
-                                chartArea: {left: 80, top: 20, 'width': '90%', 'height': '70%'},
-                                pointShape: 'circle'};
-
-                    var chart = new google.visualization.LineChart(document.getElementById('<?php echo $graph['keyword'] . $graph['url'] ?>'));
-                    chart.draw(data, options);
-                }
+                                            ]);
+                                            var options = {
+                                                legend: 'none',
+                                                vAxis: {
+                                                    title: "Position",
+                                                    viewWindowMode: 'explicit',
+                                                    viewWindow: {
+                                                        min: 1
+                                                    },
+                                                    direction: -1
+                                                },
+                                                pointSize: 10,
+                                                height: 400,
+                                                chartArea: {left: 80, top: 20, 'width': '90%', 'height': '70%'},
+                                                pointShape: 'circle'};
+                                    var chart = new google.visualization.LineChart(document.getElementById('<?php echo $graph['keyword'] . $graph['url'] ?>'));
+                                    chart.draw(data, options);
+                                }
                             </script>
                         <?php endif; ?>
                     </div>
@@ -310,6 +375,56 @@ class OPS_Rank_Reporter {
         $row = $wpdb->get_row("SELECT * FROM " . $wpdb->base_prefix . "ops_rank_report WHERE url = '" . $url . "' AND keyword = '" . $keyword . "'", ARRAY_A);
         $positions = unserialize($row['positions']);
         return $positions;
+    }
+
+    public static function ops_get_row_id($url, $keyword) {
+        global $wpdb;
+        $row = $wpdb->get_row("SELECT * FROM " . $wpdb->base_prefix . "ops_rank_report WHERE url = '" . $url . "' AND keyword = '" . $keyword . "'", ARRAY_A);
+        return $row['id'];
+    }
+
+    public static function ops_get_row_data($id) {
+        global $wpdb;
+        $row = $wpdb->get_row("SELECT * FROM " . $wpdb->base_prefix . "ops_rank_report WHERE id = '" . $id . "'", ARRAY_A);
+        return $row;
+    }
+
+    public function ops_count_backlinks($id) {
+        global $wpdb;
+        $row = $wpdb->get_row("SELECT * FROM " . $wpdb->base_prefix . "ops_rank_report WHERE id = '" . $id . "'", ARRAY_A);
+        $links = unserialize($row['links']);
+        return count($links);
+    }
+
+    public static function ops_update_backlinks_db($data, $id) {
+        global $wpdb;
+        $wpdb->update($wpdb->base_prefix . "ops_rank_report", array('links' => $data), array('id' => $id));
+    }
+
+    public static function ops_render_backlinks($id) {
+        $data = self::ops_get_row_data($id);
+        $uns_data = unserialize($data['links']);
+        if (is_array($uns_data)):
+            $uns_data = unserialize($data['links']);
+            foreach ($uns_data as $link):
+                ?>
+                <div class="single-backlink">
+                    <div class="link">
+                        <a href="<?php echo $link['url'] ?>" target="blank"><?php echo $link['url'] ?></a>&nbsp;
+                    </div>
+                    <div class="type">
+                        <?php echo $link['type'] ?>
+                    </div>
+                    <div class="price">
+                        <?php echo $link['price'] ?>&nbsp;
+                    </div>
+                    <div class="date">
+                        <?php echo date('F d, Y', $link['date']) ?>
+                    </div>
+                </div>
+                <?php
+            endforeach;
+        endif;
     }
 
 }

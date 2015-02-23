@@ -4,7 +4,7 @@
   Plugin Name: Off Page SEO
   Plugin URI: http://www.offpageseoplugin.com
   Description: Gives you tools to boost your SEO.
-  Version: 1.1.3.
+  Version: 1.1.4.
   Author: Jakub Glos
   Author URI: http://www.offpageseoplugin.com
   License:
@@ -82,13 +82,14 @@ function ops_on_activate() {
      */
     global $wpdb;
     $create_table_query = "
-            CREATE TABLE IF NOT EXISTS `{$wpdb->base_prefix}ops_rank_report` (
-              `id` INT NOT NULL DEFAULT NULL AUTO_INCREMENT PRIMARY KEY,
-              `url` text NOT NULL,
-              `keyword` text NOT NULL,
-              `positions` text NOT NULL,
-              `post_id` int NOT NULL,
-              `active` int NOT NULL
+            CREATE TABLE `{$wpdb->base_prefix}ops_rank_report` (
+              id INT NOT NULL DEFAULT NULL AUTO_INCREMENT PRIMARY KEY,
+              url text NOT NULL,
+              keyword text NOT NULL,
+              positions text NOT NULL,
+              post_id int NOT NULL,
+              active int NOT NULL,
+              links text NOT NULL
             ) DEFAULT CHARSET=utf8;
     ";
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
