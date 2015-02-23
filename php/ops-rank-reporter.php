@@ -115,7 +115,7 @@ class OPS_Rank_Reporter {
 
                 <div class="ops-kw-graph-wrapper">
 
-                    <div class="ops-kw-wrapper ops-padding <?php echo (isset($graph['open']) && $graph['open'] == 'on') ? "ops-active" : ""; ?>">
+                    <div class="ops-kw-wrapper ops-padding">
                         <!--CONTAINER-->
                         <div class="left-col">
 

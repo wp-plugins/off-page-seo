@@ -156,32 +156,65 @@ class Off_Page_SEO {
         $now = time();
         $diff = $now - $settings['last_check_site_info'];
         $home = get_home_url();
-        if ($diff > 10) { //86400
+        if ($diff > 86400) { //86400
             $pr = new Page_Rank();
             $ar = new Alexa_Rank();
             $socials = file_get_contents('http://count.donreach.com/?url=' . $home);
             $socials = json_decode($socials);
+        
             $alexa_rank = number_format($ar->get_rank($home));
             $page_rank = $pr->get_google_pagerank($home);
 
             $settings['last_check_site_info'] = $now;
             $settings['site_info']['page_rank'] = $page_rank;
             $settings['site_info']['alexa_rank'] = $alexa_rank;
-            $settings['site_info']['facebook'] = $socials->shares->facebook;
-            $settings['site_info']['twitter'] = $socials->shares->twitter;
-            $settings['site_info']['google'] = $socials->shares->google;
-            $settings['site_info']['pinterest'] = $socials->shares->pinterest;
-            $settings['site_info']['stumbleupon'] = $socials->shares->stumbleupon;
-            $settings['site_info']['delicious'] = $socials->shares->delicious;
-            $settings['site_info']['reddit'] = $socials->shares->reddit;
-            $settings['site_info']['linkedin'] = $socials->shares->linkedin;
+            if (isset($socials->shares->facebook)) {
+                $settings['site_info']['facebook'] = $socials->shares->facebook;
+            } else {
+                $settings['site_info']['facebook'] = 0;
+            }
+            if (isset($socials->shares->google)) {
+                $settings['site_info']['google'] = $socials->shares->google;
+            } else {
+                $settings['site_info']['google'] = 0;
+            }
+            if (isset($socials->shares->twitter)) {
+                $settings['site_info']['twitter'] = $socials->shares->twitter;
+            } else {
+                $settings['site_info']['twitter'] = 0;
+            }
+            if (isset($socials->shares->pinterest)) {
+                $settings['site_info']['pinterest'] = $socials->shares->pinterest;
+            } else {
+                $settings['site_info']['pinterest'] = 0;
+            }
+            if (isset($socials->shares->stumbleupon)) {
+                $settings['site_info']['stumbleupon'] = $socials->shares->stumbleupon;
+            } else {
+                $settings['site_info']['stumbleupon'] = 0;
+            }
+            if (isset($socials->shares->delicious)) {
+                $settings['site_info']['delicious'] = $socials->shares->delicious;
+            } else {
+                $settings['site_info']['delicious'] = 0;
+            }
+            if (isset($socials->shares->reddit)) {
+                $settings['site_info']['reddit'] = $socials->shares->reddit;
+            } else {
+                $settings['site_info']['reddit'] = 0;
+            }
+            if (isset($socials->shares->linkedin)) {
+                $settings['site_info']['linkedin'] = $socials->shares->linkedin;
+            } else {
+                $settings['site_info']['linkedin'] = 0;
+            }
 
             // check for GB
-            $url = Off_Page_SEO::$mother . '/check?site_url='. urlencode(get_home_url());
+            $url = Off_Page_SEO::$mother . '/check?site_url=' . urlencode(get_home_url());
             $str = ops_curl($url);
             $html = str_get_html($str);
-            
-            if(strpos($html, 'IS')){
+
+            if (strpos($html, 'IS')) {
                 $settings['site_info']['guest_posting'] = true;
             } else {
                 $settings['site_info']['guest_posting'] = false;

@@ -4,7 +4,7 @@
   Plugin Name: Off Page SEO
   Plugin URI: http://www.offpageseoplugin.com
   Description: Gives you tools to boost your SEO.
-  Version: 1.1.2.
+  Version: 1.1.3.
   Author: Jakub Glos
   Author URI: http://www.offpageseoplugin.com
   License:

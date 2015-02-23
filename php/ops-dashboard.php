@@ -165,7 +165,8 @@ class OPS_Dashboard {
 
 
                 <div class="site-lang">
-                    Site language: <b><?php echo Off_Page_SEO::ops_get_language($settings['lang']) ?></b>
+                    Site language: <b><?php echo Off_Page_SEO::ops_get_language($settings['lang']) ?></b><br/>
+                    Next scheduled check: <strong><?php echo date('F d, Y H:i:s', $settings['last_check'] + 259200); ?></strong>
                 </div>
             </div>
 
