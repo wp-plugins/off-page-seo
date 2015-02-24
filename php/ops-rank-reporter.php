@@ -155,7 +155,8 @@ class OPS_Rank_Reporter {
                         $(this).parent().empty();
                     });
 
-                    $('.ops-show-backlinks').click(function () {
+                    $('.ops-show-backlinks').click(function (e) {
+                        e.preventDefault();
                         if ($(this).parent().find('.ops-backlinks-list').hasClass('ops-open') === false) {
                             $(this).parent().find('.ops-backlinks-list').addClass('ops-open').slideDown();
                         } else {
