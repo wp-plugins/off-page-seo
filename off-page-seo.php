@@ -77,6 +77,7 @@ if (isset($_GET['update_positions']) && $_GET['update_positions'] == 'do_it') {
 register_activation_hook(__FILE__, 'ops_on_activate');
 
 function ops_on_activate() {
+    
     /*
      * Insert database table
      */
@@ -98,7 +99,10 @@ function ops_on_activate() {
     /*
      * Add Option if not multisite
      */
-    if (!is_multisite()) {
+    
+    $settings = Off_Page_SEO::ops_get_settings();
+    
+    if (!is_multisite() && !isset($settings['lang'])) {
         $settings = array(
             'null' => 'yes',
             'last_check' => 0,
