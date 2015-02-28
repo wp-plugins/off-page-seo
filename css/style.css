@@ -12,7 +12,7 @@
   float: left;
 }
 .ops-padding {
-  padding: 10px;
+  padding: 10px !important;
 }
 .ops-line {
   padding: 10px;
