@@ -4,7 +4,7 @@
   Plugin Name: Off Page SEO
   Plugin URI: http://www.offpageseoplugin.com
   Description: Gives you tools to boost your SEO.
-  Version: 1.1.4.
+  Version: 1.1.5.
   Author: Jakub Glos
   Author URI: http://www.offpageseoplugin.com
   License:
@@ -33,7 +33,7 @@ require_once('php/ops-dashboard-widget-backlinks.php');
 require_once('php/ops-rank-reporter.php');
 require_once('php/ops-analyze-keyword.php');
 require_once('php/ops-backlinks.php');
-require_once('php/ops-backlinks-feed.php');
+require_once('php/ops-backlinks-database.php');
 require_once('php/ops-backlinks-gb.php');
 require_once('php/ops-backlinks-comment.php');
 require_once('php/ops-knowledge-base.php');
@@ -59,17 +59,11 @@ if (is_admin()) {
 }
       
 /*
- *  This fires iframe which will update rank positions
+ *  This fires ajax crone which will update rank positions
  */
 Off_Page_SEO::ops_position_cron();
 
 
-/*
- * If we are in iframe, update positions
- */
-if (isset($_GET['update_positions']) && $_GET['update_positions'] == 'do_it') {
-    OPS_Rank_Reporter::ops_update_positions();
-}
 
 /*
  * Install

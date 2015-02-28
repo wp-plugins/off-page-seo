@@ -3,7 +3,7 @@ Contributors: proka
 Stable tag: trunk
 Plugin URI: http://www.offpageseoplugin.com/
 Description: Turn your WordPress site into the ultimate SEO tool! Monitor SERP progress, get backlinks, join the guest posting network, analyze competitors, and much more.
-Version: 1.1.4.
+Version: 1.1.5.
 Tags: seo, off page, backlinks, serp, google, rank reporter, rank checker, rank, guest posting, guest blogging
 Tested up to: 4.1.0
 Requires at least: 3.0.1
@@ -56,6 +56,9 @@ Installation
 4. Knowledge Base of most interesting articles found on internet
 
 == Changelog ==
+
+= 1.1.5. =
+* Ajax call for the positions update are used since now, api add site return url fixed, ability to leave Guest Posting network.
 
 = 1.1.4. =
 * Functionality added - you can note where you gained links

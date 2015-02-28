@@ -17,13 +17,13 @@ class OPS_Backlinks_GB {
 
 
         // feed from another site
-        $url = Off_Page_SEO::$mother . '/guest-posting/?lang=' . $settings['lang'] . '&ops_search=' . $search;
+        $url = Off_Page_SEO::$mother . '/api/guest-posting/?lang=' . $settings['lang'] . '&ops_search=' . $search;
         $data = ops_curl($url, 1);
         ?>
 
         <!--RENDER-->
         <div class="wrap" id="ops-pr-submissions">
-            <h2 class="ops-h2">Backlink database</h2>
+            <h2 class="ops-h2">Guest Posting</h2>
             <div class="ops-breadcrumbs">
                 <ul>
                     <li><a href="admin.php?page=ops">Dashboard</a> &#8658;</li>
@@ -50,7 +50,9 @@ class OPS_Backlinks_GB {
         </div>
         <script>
             jQuery(document).ready(function ($) {
-                $('body, html').on('click', '.owner-email a', function () {
+                $('body, html').on('click', '.owner-email a', function (e) {
+                    e.preventDefault();
+                    $(this).hide();
                     var aObj = $(this);
                     var email = $(this).data('mail');
                     $.ajax({

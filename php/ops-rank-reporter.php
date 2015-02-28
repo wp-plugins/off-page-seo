@@ -344,7 +344,6 @@ class OPS_Rank_Reporter {
         // update last check
         $now = time();
         $settings = Off_Page_SEO::ops_get_settings();
-
         global $wpdb;
         // get positions
         foreach ($settings['graphs'] as $graph) {

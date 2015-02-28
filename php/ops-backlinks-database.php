@@ -30,13 +30,13 @@ class OPS_Backlinks_Feed {
         }
 
         // feed from another site
-        $url = Off_Page_SEO::$mother . '/pr-submissions/?lang=' . $settings['lang'] . '&show=' . $show . '&ops_search=' . $search . '&type=' . $type;
+        $url = Off_Page_SEO::$mother . '/api/backlinks/?lang=' . $settings['lang'] . '&show=' . $show . '&ops_search=' . $search . '&type=' . $type;
         $data = ops_curl($url, 1);
         ?>
 
         <!--RENDER-->
         <div class="wrap" id="ops-pr-submissions">
-            <h2 class="ops-h2">Backlink database</h2>
+            <h2 class="ops-h2">Backlinks database</h2>
             <div class="ops-breadcrumbs">
                 <ul>
                     <li><a href="admin.php?page=ops">Dashboard</a> &#8658;</li>

@@ -109,27 +109,40 @@ class Off_Page_SEO {
      * Runs every 3 days and updates positions in Google
      */
     public static function ops_position_cron() {
+
         $settings = Off_Page_SEO::ops_get_settings();
-        $diff = time() - $settings['last_check'];
-        if ($diff > 259200 && !is_admin()) { // 302400
+
+        $now = time();
+        $diff = $now - $settings['last_check'];
+        if ($diff > 259200 && !is_admin()) { // 259200
             // update last check first
-            $now = time();
             $settings['last_check'] = $now;
             self::ops_update_option('ops_settings', serialize($settings));
 
             // insert iframe
-            add_action('wp_head', array('Off_Page_SEO', 'ops_insert_iframe_for_possitions'));
+            add_action('wp_footer', array('Off_Page_SEO', 'ops_update_positions_cron'));
         }
     }
 
     /**
      * First it inserts Iframe - in case there is some error, it will not crash the page
      */
-    public static function ops_insert_iframe_for_possitions() {
+    public static function ops_update_positions_cron() {
         ?>
-        <div style="display:none; overflow: hidden;">
-            <iframe src="<?php echo get_the_permalink() ?>?update_positions=do_it" width="1" height="1"></iframe>
-        </div>
+        <script>
+            jQuery(document).ready(function ($) {
+                var doCron = '1';
+                $.ajax({
+                    url: '<?php echo plugins_url('off-page-seo/php/ajax/ops-do-cron.php') ?>',
+                    type: "POST",
+                    data: {doCron: doCron},
+                    success: function (data) {
+                    },
+                    error: function () {
+                    }
+                });
+            });
+        </script>
         <?php
     }
 
@@ -161,7 +174,7 @@ class Off_Page_SEO {
             $ar = new Alexa_Rank();
             $socials = file_get_contents('http://count.donreach.com/?url=' . $home);
             $socials = json_decode($socials);
-        
+
             $alexa_rank = number_format($ar->get_rank($home));
             $page_rank = $pr->get_google_pagerank($home);
 

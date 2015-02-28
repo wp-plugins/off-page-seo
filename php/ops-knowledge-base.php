@@ -7,7 +7,7 @@ class OPS_Knowledge_Base {
      * */
     public function __construct() {
         $settings = Off_Page_SEO::ops_get_settings();
-        $url = Off_Page_SEO::$mother . '/knowledge-base/?lang=' . $settings['lang'];
+        $url = Off_Page_SEO::$mother . '/api/knowledge-base/?lang=' . $settings['lang'];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

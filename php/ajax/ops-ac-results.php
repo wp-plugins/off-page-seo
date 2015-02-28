@@ -60,15 +60,15 @@ foreach ($linkObjs as $linkObj) {
             </div>
             <div class="tab">
                 Ahrefs
-                <span>1/day</span>
+                <span>1-2/day</span>
             </div>
             <div class="tab">
                 Majestic
-                <span>2/day</span>
+                <span>3-6/day</span>
             </div>
             <div class="tab">
                 SEOMOZ
-                <span>2/day</span>
+                <span>3/day</span>
             </div>
         </div>
     </div>

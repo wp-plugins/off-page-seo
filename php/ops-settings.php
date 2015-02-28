@@ -16,8 +16,11 @@ class OPS_Settings {
         if (isset($_GET['saved']) && $_GET['saved'] == true) {
             ?>
             <div class="updated" style="padding: 8px 20px;">
-                Settings were updated.
-                
+                <?php if (isset($_GET['signed']) && $_GET['signed'] == 'true'): ?>
+                    You should be able to browse <a href="admin.php?page=ops_backlinks">guest posting</a> network now!
+                <?php else: ?>
+                    Settings were updated.
+                <?php endif; ?>
             </div> 
             <?php
         }

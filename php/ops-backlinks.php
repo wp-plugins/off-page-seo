@@ -57,10 +57,11 @@ class OPS_Backlinks {
                         <div class="customs">
                             <h3>Guest Posting</h3>
                             <p>Start guest posting!</p>
+                            <a target="_blank" href="<?php echo Off_Page_SEO::$mother ?>/api/remove-site?site_name=<?php echo urlencode(get_bloginfo('name')) ?>&lang=<?php echo $settings['lang'] ?>&site_url=<?php echo urlencode(get_home_url()) ?>&email=<?php echo urlencode(get_option('admin_email')) ?>">Leave network</a>
                         </div>
                     <?php else: ?>
                         <div class="explore">
-                            <a target="_blank" href="<?php echo Off_Page_SEO::$mother ?>/add?site_name=<?php echo urlencode(get_bloginfo('name')) ?>&lang=<?php echo $settings['lang'] ?>&site_url=<?php echo urlencode(get_home_url()) ?>&email=<?php echo urlencode(get_option('admin_email')) ?>" class="button button-primary ops-join">Join !</a>
+                            <a target="_blank" href="<?php echo Off_Page_SEO::$mother ?>/api/add-site?site_name=<?php echo urlencode(get_bloginfo('name')) ?>&lang=<?php echo $settings['lang'] ?>&site_url=<?php echo urlencode(get_home_url()) ?>&email=<?php echo urlencode(get_option('admin_email')) ?>" class="button button-primary ops-join">Join !</a>
                         </div>
                         <div class="customs">
                             <h3>Guest Posting</h3>
