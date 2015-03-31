@@ -88,7 +88,7 @@ class OPS_Social_Networks {
                         ?>
                         <tr> 
                             <td><?php the_time('F d, Y') ?></td> 
-                            <td><?php the_title() ?></td> 
+                            <td><a href="<?php the_permalink()?>" target="_blank"><?php the_title() ?></a><a href="post.php?post=<?php echo get_the_ID() ?>&action=edit" target="_blank" class="edit">Edit</a></td> 
                             <td class="ops-center"><?php echo $shares['count']['facebook'] ?></td> 
                             <td class="ops-center"><?php echo $shares['count']['twitter'] ?></td> 
                             <td class="ops-center"><?php echo $shares['count']['googleplus'] ?></td> 

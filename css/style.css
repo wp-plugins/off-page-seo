@@ -614,6 +614,11 @@ h2.ops-h2 {
 #ops-social-networks table#ops-share-table {
   background-color: #fff;
 }
+#ops-social-networks table#ops-share-table a.edit {
+  font-size: 10px;
+  font-style: italic;
+  margin-left: 10px;
+}
 #ops-social-networks table#ops-share-table .soc-fb {
   font-size: 0;
   background: #ececec url('../img/pl-soc-fb.png') no-repeat center center;
