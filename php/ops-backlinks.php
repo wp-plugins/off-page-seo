@@ -46,7 +46,6 @@ class OPS_Backlinks {
                 </div>
             </div>
 
-
             <div class="backlink-tab postbox ops-padding">
                 <div class="ops-letter">G.</div>
                 <div class="right-wrapper">

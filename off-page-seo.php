@@ -4,7 +4,7 @@
   Plugin Name: Off Page SEO
   Plugin URI: http://www.offpageseoplugin.com
   Description: Gives you tools to boost your SEO.
-  Version: 1.1.5.
+  Version: 1.2.0.
   Author: Jakub Glos
   Author URI: http://www.offpageseoplugin.com
   License:
@@ -30,6 +30,7 @@ require_once('php/ops.php');
 require_once('php/ops-dashboard.php');
 require_once('php/ops-dashboard-widget-reporter.php');
 require_once('php/ops-dashboard-widget-backlinks.php');
+require_once('php/ops-meta-box-shares.php');
 require_once('php/ops-rank-reporter.php');
 require_once('php/ops-analyze-keyword.php');
 require_once('php/ops-backlinks.php');
@@ -37,6 +38,8 @@ require_once('php/ops-backlinks-database.php');
 require_once('php/ops-backlinks-gb.php');
 require_once('php/ops-backlinks-comment.php');
 require_once('php/ops-knowledge-base.php');
+require_once('php/ops-share-counter.php');
+require_once('php/ops-social-networks.php');
 require_once('php/ops-settings.php');
 
 /*
@@ -45,6 +48,12 @@ require_once('php/ops-settings.php');
 require_once('php/tools/simple-html-dom.php');
 require_once('php/tools/alexarank.php');
 require_once('php/tools/pagerank.php');
+
+
+/* Create Class Share Counter */
+if (!is_admin()) {
+    new OPS_Share_Counter();
+}
 
 /*
  *  Initiate main Class  
@@ -57,7 +66,10 @@ if (is_admin()) {
         $ops = new OPS_Multisite();
     }
 }
-      
+
+
+
+        
 /*
  *  This fires ajax crone which will update rank positions
  */
@@ -71,7 +83,7 @@ Off_Page_SEO::ops_position_cron();
 register_activation_hook(__FILE__, 'ops_on_activate');
 
 function ops_on_activate() {
-    
+
     /*
      * Insert database table
      */
@@ -90,12 +102,11 @@ function ops_on_activate() {
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     dbDelta($create_table_query);
 
-    /*
+    /**
      * Add Option if not multisite
      */
-    
     $settings = Off_Page_SEO::ops_get_settings();
-    
+
     if (!is_multisite() && !isset($settings['lang'])) {
         $settings = array(
             'null' => 'yes',
@@ -129,4 +140,3 @@ function ops_on_activate() {
         Off_Page_SEO::ops_update_option('ops_settings', serialize($settings));
     }
 }
-  

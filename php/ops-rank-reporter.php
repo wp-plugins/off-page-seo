@@ -192,7 +192,7 @@ class OPS_Rank_Reporter {
                                 <?php echo $graph['url'] ?>
                             </div>
                             <div class="ops-show-backlinks">
-                                <a href="#" class="button">Backlinks (<?php echo $this->ops_count_backlinks($row_id)  ?>)</a> 
+                                <a href="#" class="button">Backlinks (<?php echo $this->ops_count_backlinks($row_id) ?>)</a> 
                             </div>
                             <div class="ops-backlinks-list" style="display:none;">
                                 <?php $this->ops_render_backlinks($row_id); ?>
@@ -215,21 +215,36 @@ class OPS_Rank_Reporter {
                             <!--NOW-->
                             <?php if (isset($positions[0]['position'])): ?>
                                 <div class="position">
-                                    <span>Now: </span> <?php echo $positions[0]['position'] ?>
+                                    <span class="when-time"></span> 
+                                    <u><?php echo $positions[0]['position'] ?></u>
+                                    <?php $diff = $positions[1]['position'] - $positions[0]['position']; ?>
+                                    <?php
+                                    if ($diff < 0) {
+                                        $class = 'bad';
+                                        $arrow = '&darr;';
+                                    } elseif ($diff == 0) {
+                                        $class = 'neutral';
+                                        $arrow = '';
+                                    } else {
+                                        $class = 'good';
+                                        $arrow = '&uarr;';
+                                    }
+                                    ?>
+                                    <span class="change <?php echo $class ?>"><?php echo $diff . ' ' . $arrow; ?></span>
                                 </div>
                             <?php endif; ?>
 
                             <!--WEEK AGO-->
                             <?php if (isset($positions[1]['position'])): ?>
                                 <div class="position">
-                                    <span>Last time: </span> <?php echo $positions[1]['position'] ?>
+                                    <span class="when-time"></span> <?php echo $positions[1]['position'] ?>
                                 </div>
                             <?php endif; ?>
 
                             <!--MONTH AGO-->
                             <?php if (isset($positions[2]['position'])): ?>
                                 <div class="position">
-                                    <span>2 ago: </span> <?php echo $positions[2]['position'] ?>
+                                    <span class="when-time"></span> <?php echo $positions[2]['position'] ?>
                                 </div>
                             <?php endif; ?>
 

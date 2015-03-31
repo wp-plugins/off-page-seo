@@ -13,6 +13,8 @@ class Off_Page_SEO {
     public function __construct() {
 
         add_action('wp_dashboard_setup', array($this, 'ops_add_dashboard_widgets'));
+        
+        add_action('add_meta_boxes', array($this, 'ops_add_post_meta_box_shares'));
 
         add_action('admin_menu', array($this, 'init'));
 
@@ -26,14 +28,16 @@ class Off_Page_SEO {
         // analyze competitors
         add_menu_page('Off Page SEO', 'Off Page SEO', 'read', 'ops', array($this, 'ops_dashboard'), 'dashicons-groups', '2.0981816');
 
-        // settings
+        // analyze kw
         add_submenu_page('ops', 'Analyze Keyword', 'Analyze Keyword', 'read', 'ops_analyze_keyword', array($this, 'ops_analyze_keyword'));
 
-
-        // settings
+        // backlinks
         add_submenu_page('ops', 'Backlinks', 'Backlinks', 'read', 'ops_backlinks', array($this, 'ops_backlinks'));
 
-        // settings
+        // share counter
+        add_submenu_page('ops', 'Social Networks', 'Social Networks', 'read', 'ops_social_networks', array($this, 'ops_social_networks'));
+
+        // knowledge base
         add_submenu_page('ops', 'Knowledge Base', 'Knowledge Base', 'read', 'ops_knowledge_base', array($this, 'ops_knowledge_base'));
 
         // settings
@@ -46,6 +50,26 @@ class Off_Page_SEO {
         wp_enqueue_style('ops_select_2_css', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-beta.3/css/select2.min.css');
 
         wp_enqueue_script('ops_select_2_js', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-beta.3/js/select2.min.js');
+    }
+
+    /**
+     * Adds meta boxes with shares
+     */
+    public function ops_add_post_meta_box_shares() {
+        
+        $meta_box = new OPS_Meta_Box_Shares;
+        $settings = self::ops_get_settings();
+        $post_types = $settings['post_types'];
+        foreach ($post_types as $post_type) {
+            add_meta_box(
+                    'ops-share-counter-box',
+                    esc_html__('Social Networks', 'ops'), 
+                    array($meta_box, 'init'), 
+                    $post_type, // Admin page (or post type)
+                    'side', // Context
+                    'default'         // Priority
+            );
+        }
     }
 
     /**
@@ -89,6 +113,13 @@ class Off_Page_SEO {
      */
     public function ops_backlinks() {
         new OPS_Backlinks;
+    }
+
+    /**
+     * Render Dashboard Widget
+     */
+    public function ops_social_networks() {
+        new OPS_Social_Networks();
     }
 
     /**
@@ -161,6 +192,29 @@ class Off_Page_SEO {
     }
 
     /**
+     * Recognize if the site is multisite. It returns either blog settings or page settings.
+     * returns: array
+     */
+    public static function ops_update_settings($what, $value) {
+        if (is_multisite()) {
+            $settings = unserialize(get_blog_option(get_current_blog_id(), 'ops_settings'));
+        } else {
+            $settings = unserialize(get_site_option('ops_settings'));
+        }
+
+        $new_settings = $settings;
+        $new_settings[$what] = $value;
+
+        $save_this = serialize($new_settings);
+
+        if (is_multisite()) {
+            update_blog_option(get_current_blog_id(), 'ops_settings', $save_this);
+        } else {
+            update_site_option('ops_settings', $save_this);
+        }
+    }
+
+    /**
      * Every day it saves site info to the database (page rank, alexa rank, social shares)
      */
     public function ops_cache_site_info() {
@@ -172,8 +226,6 @@ class Off_Page_SEO {
         if ($diff > 86400) { //86400
             $pr = new Page_Rank();
             $ar = new Alexa_Rank();
-            $socials = file_get_contents('http://count.donreach.com/?url=' . $home);
-            $socials = json_decode($socials);
 
             $alexa_rank = number_format($ar->get_rank($home));
             $page_rank = $pr->get_google_pagerank($home);
@@ -181,57 +233,65 @@ class Off_Page_SEO {
             $settings['last_check_site_info'] = $now;
             $settings['site_info']['page_rank'] = $page_rank;
             $settings['site_info']['alexa_rank'] = $alexa_rank;
-            if (isset($socials->shares->facebook)) {
-                $settings['site_info']['facebook'] = $socials->shares->facebook;
-            } else {
-                $settings['site_info']['facebook'] = 0;
-            }
-            if (isset($socials->shares->google)) {
-                $settings['site_info']['google'] = $socials->shares->google;
-            } else {
-                $settings['site_info']['google'] = 0;
-            }
-            if (isset($socials->shares->twitter)) {
-                $settings['site_info']['twitter'] = $socials->shares->twitter;
-            } else {
-                $settings['site_info']['twitter'] = 0;
-            }
-            if (isset($socials->shares->pinterest)) {
-                $settings['site_info']['pinterest'] = $socials->shares->pinterest;
-            } else {
-                $settings['site_info']['pinterest'] = 0;
-            }
-            if (isset($socials->shares->stumbleupon)) {
-                $settings['site_info']['stumbleupon'] = $socials->shares->stumbleupon;
-            } else {
-                $settings['site_info']['stumbleupon'] = 0;
-            }
-            if (isset($socials->shares->delicious)) {
-                $settings['site_info']['delicious'] = $socials->shares->delicious;
-            } else {
-                $settings['site_info']['delicious'] = 0;
-            }
-            if (isset($socials->shares->reddit)) {
-                $settings['site_info']['reddit'] = $socials->shares->reddit;
-            } else {
-                $settings['site_info']['reddit'] = 0;
-            }
-            if (isset($socials->shares->linkedin)) {
-                $settings['site_info']['linkedin'] = $socials->shares->linkedin;
-            } else {
-                $settings['site_info']['linkedin'] = 0;
-            }
 
             // check for GB
             $url = Off_Page_SEO::$mother . '/check?site_url=' . urlencode(get_home_url());
             $str = ops_curl($url);
             $html = str_get_html($str);
-
             if (strpos($html, 'IS')) {
                 $settings['site_info']['guest_posting'] = true;
             } else {
                 $settings['site_info']['guest_posting'] = false;
             }
+
+            $fb = 0;
+            $tw = 0;
+            $go = 0;
+            $po = 0;
+            $pi = 0;
+            $total = 0;
+
+            $post_types = self::ops_get_post_types();
+            $args = array(
+                'post_type' => $post_types,
+                'orderby' => 'date',
+                'order' => 'DESC',
+                'posts_per_page' => 10000,
+                'meta_query' => array(
+                    array(
+                        'key' => 'ops_shares',
+                        'compare' => 'EXISTS',
+                    ),
+                ),
+            );
+            $wp_query = new WP_Query($args);
+
+            if ($wp_query->have_posts()) :
+                while ($wp_query->have_posts()): $wp_query->the_post();
+
+                    $meta = get_post_meta(get_the_ID());
+                    $shares = unserialize($meta['ops_shares'][0]);
+
+                    foreach ($shares['count'] as $share) {
+                        $total = $total + $share;
+                    }
+
+                    $fb = $fb + $shares['count']['facebook'];
+                    $tw = $tw + $shares['count']['twitter'];
+                    $go = $go + $shares['count']['googleplus'];
+                    $po = $po + $shares['count']['pocket'];
+                    $pi = $pi + $shares['count']['pinterest'];
+
+                endwhile;
+            endif;
+
+            $settings['site_info']['shares_total'] = $total;
+            $settings['site_info']['shares_facebook'] = $fb;
+            $settings['site_info']['shares_twitter'] = $tw;
+            $settings['site_info']['shares_googleplus'] = $go;
+            $settings['site_info']['shares_pocket'] = $po;
+            $settings['site_info']['shares_pinterest'] = $pi;
+
 
             Off_Page_SEO::ops_update_option('ops_settings', serialize($settings));
         }
@@ -244,9 +304,22 @@ class Off_Page_SEO {
      */
     public static function ops_update_option($option, $value) {
         if (is_multisite()) {
-            update_blog_option(get_current_blog_id(), 'ops_settings', $value);
+            update_blog_option(get_current_blog_id(), $option, $value);
         } else {
             update_site_option($option, $value);
+        }
+    }
+
+    /**
+     * GET Option based on multistite / or not
+     * @param type $option
+     * @param type $value
+     */
+    public static function ops_get_option($option) {
+        if (is_multisite()) {
+            get_blog_option(get_current_blog_id(), $option);
+        } else {
+            get_site_option($option);
         }
     }
 
@@ -265,6 +338,49 @@ class Off_Page_SEO {
     public static function ops_get_lang() {
         $settings = Off_Page_SEO::ops_get_settings();
         return $settings['lang'];
+    }
+
+    /**
+     * Get post types
+     * @return boolean
+     */
+    public static function ops_get_post_types() {
+        $settings = self::ops_get_settings();
+        if (isset($settings['post_types'])) {
+            return $settings['post_types'];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * If the post types is checked
+     */
+    public static function ops_post_type_is_checked($type) {
+        $settings = self::ops_get_settings();
+        if (isset($settings['post_types'])) {
+            foreach ($settings['post_types'] as $pt) {
+                if ($pt == $type) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Allowed post types
+     * @return type
+     */
+    public static function ops_get_allowed_post_types() {
+        $types = get_post_types();
+        $banned = array('wpcf7_contact_form', 'nav_menu_item', 'revision', 'attachment', 'acf');
+        foreach ($types as $type) {
+            if (!in_array($type, $banned))
+                $data[] = $type;
+        }
+
+        return $data;
     }
 
     /**

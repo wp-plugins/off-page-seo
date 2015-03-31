@@ -130,6 +130,7 @@ class OPS_Settings {
         ?>
         <div class="wrap" id="ops-settings">
             <?php $settings = Off_Page_SEO::ops_get_settings(); ?>
+            <?php // echo "<pre>"; print_r($settings); echo "</pre>"; ?>
             <h2 class="ops-h2">Settings</h2>
             <div class="ops-breadcrumbs">
                 <ul>
@@ -140,19 +141,23 @@ class OPS_Settings {
             <form method="post" action="">
                 <!--HIDDEN FIELD-->
                 <input type="hidden" value="yes" name="null" />
+                <!--TIMERS-->
                 <input type="hidden" value="<?php echo $settings['last_check'] ?>" name="last_check" />
                 <input type="hidden" value="<?php echo $settings['last_check_site_info'] ?>" name="last_check_site_info" />
+                <input type="hidden" value="<?php echo (isset($settings['ops_share_timer'])) ? $settings['ops_share_timer'] : "0"; ?>" name="ops_share_timer" />
+                <input type="hidden" value="<?php echo (isset($settings['ops_all_shares_checked'])) ? $settings['ops_all_shares_checked'] : "0"; ?>" name="ops_all_shares_checked" />
+                <!--RANKS-->
                 <input type="hidden" value="<?php echo $settings['site_info']['page_rank'] ?>" name="site_info[page_rank]" />
                 <input type="hidden" value="<?php echo $settings['site_info']['alexa_rank'] ?>" name="site_info[alexa_rank]" />
-                <input type="hidden" value="<?php echo $settings['site_info']['facebook'] ?>" name="site_info[facebook]" />
-                <input type="hidden" value="<?php echo $settings['site_info']['twitter'] ?>" name="site_info[twitter]" />
-                <input type="hidden" value="<?php echo $settings['site_info']['google'] ?>" name="site_info[google]" />
-                <input type="hidden" value="<?php echo $settings['site_info']['pinterest'] ?>" name="site_info[pinterest]" />
-                <input type="hidden" value="<?php echo $settings['site_info']['stumbleupon'] ?>" name="site_info[stumbleupon]" />
-                <input type="hidden" value="<?php echo $settings['site_info']['delicious'] ?>" name="site_info[delicious]" />
-                <input type="hidden" value="<?php echo $settings['site_info']['reddit'] ?>" name="site_info[reddit]" />
-                <input type="hidden" value="<?php echo $settings['site_info']['linkedin'] ?>" name="site_info[linkedin]" />
+                <!--GUEST POSTING-->
                 <input type="hidden" value="<?php echo $settings['site_info']['guest_posting'] ?>" name="site_info[guest_posting]" />
+                <!--SHARES-->
+                <input type="hidden" value="<?php echo (isset($settings['site_info']['shares_total'])) ? $settings['site_info']['shares_total'] : "0"; ?>" name="site_info[shares_total]" />
+                <input type="hidden" value="<?php echo (isset($settings['site_info']['shares_facebook'])) ? $settings['site_info']['shares_facebook'] : "0"; ?>" name="site_info[shares_facebook]" />
+                <input type="hidden" value="<?php echo (isset($settings['site_info']['shares_twitter'])) ? $settings['site_info']['shares_twitter'] : "0"; ?>" name="site_info[shares_twitter]" />
+                <input type="hidden" value="<?php echo (isset($settings['site_info']['shares_googleplus'])) ? $settings['site_info']['shares_googleplus'] : "0"; ?>" name="site_info[shares_googleplus]" />
+                <input type="hidden" value="<?php echo (isset($settings['site_info']['shares_pocket'])) ? $settings['site_info']['shares_pocket'] : "0"; ?>" name="site_info[shares_pocket]" />
+                <input type="hidden" value="<?php echo (isset($settings['site_info']['shares_pinterest'])) ? $settings['site_info']['shares_pinterest'] : "0"; ?>" name="site_info[shares_pinterest]" />
 
 
 
@@ -244,8 +249,67 @@ class OPS_Settings {
                 <!--RIGHT COL-->
                 <div class="right-col">
 
+                    <div class="postbox" id="ops-post-types">
+                        <h3 class="ops-h3">Social Shares</h3>
+
+                        <div class="ops-padding">
+                            <div class="row" style="margin-bottom: 20px;">
+                                Please select post types you want to check social shares for.
+                            </div>
+                            <div class="ops-left-col">
+                                <h4>All post types </h4>
+                                <div class="ops-all-post-types">
+                                    <?php
+                                    $pts = Off_Page_SEO::ops_get_allowed_post_types();
+                                    ?>
+                                    <?php foreach ($pts as $pt): ?>
+                                        <?php if (!Off_Page_SEO::ops_post_type_is_checked($pt)): ?>
+                                            <div class="ops-post-type" data-pt="<?php echo $pt ?>">
+                                                <?php echo $pt ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                            <div class="ops-right-col">
+                                <h4>Selected post types</h4>
+                                <div class="ops-selected-post-types">
+                                    <?php foreach ($pts as $pt): ?>
+                                        <?php if (Off_Page_SEO::ops_post_type_is_checked($pt)): ?>
+                                            <div class="ops-post-type" data-pt="<?php echo $pt ?>">
+                                                <input type="hidden" value="<?php echo $pt ?>" name="post_types[]" />
+                                                <?php echo $pt ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                            <div class="ops-clearfix">
+
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        jQuery(document).ready(function ($) {
+                            $('body, html').on('click', '.ops-all-post-types .ops-post-type', function () {
+                                var type = $(this).data('pt');
+                                $(this).remove();
+                                $('form input[name=ops_all_shares_checked]').val('0');
+                                $('form input[name=ops_share_timer]').val('0');
+                                $('#ops-post-types .ops-selected-post-types').append('<div class="ops-post-type" data-pt="' + type + '"><input type="hidden" value="' + type + '" name="post_types[]" />' + type + '</div>');
+                            });
+
+                            $('body, html').on('click', '.ops-selected-post-types .ops-post-type', function () {
+                                var type = $(this).data('pt');
+                                $(this).remove();
+                                $('#ops-post-types .ops-all-post-types').append('<div class="ops-post-type" data-pt="' + type + '">' + type + '</div>');
+                            });
+                        });
+                    </script>
+
+
                     <div class="postbox" id="ops-social-metrics-settings">
-                        <h3 class="ops-h3">Social metrics</h3>
+                        <h3 class="ops-h3">Ranks</h3>
                         <div class="ops-padding">
                             <div class="row">
                                 <input type="checkbox" name="show[page_rank]" <?php echo (isset($settings['show']['page_rank']) && $settings['show']['page_rank'] == 'on') ? "checked='checked'" : ""; ?>/>
@@ -254,38 +318,6 @@ class OPS_Settings {
                             <div class="row">
                                 <input type="checkbox" name="show[alexa_rank]" <?php echo (isset($settings['show']['alexa_rank']) && $settings['show']['alexa_rank'] == 'on') ? "checked='checked'" : ""; ?>/>
                                 Alexa Rank
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" name="show[facebook]" <?php echo (isset($settings['show']['facebook']) && $settings['show']['facebook'] == 'on') ? "checked='checked'" : ""; ?>/>
-                                Facebook
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" name="show[twitter]" <?php echo (isset($settings['show']['twitter']) && $settings['show']['twitter'] == 'on') ? "checked='checked'" : ""; ?>/>
-                                Twitter
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" name="show[google]" <?php echo (isset($settings['show']['google']) && $settings['show']['google'] == 'on') ? "checked='checked'" : ""; ?>/>
-                                Google
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" name="show[pinterest]" <?php echo (isset($settings['show']['pinterest']) && $settings['show']['pinterest'] == 'on') ? "checked='checked'" : ""; ?>/>
-                                Pinterest
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" name="show[stumbleupon]" <?php echo (isset($settings['show']['stumbleupon']) && $settings['show']['stumbleupon'] == 'on') ? "checked='checked'" : ""; ?>/>
-                                Stumbleupon
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" name="show[delicious]" <?php echo (isset($settings['show']['delicious']) && $settings['show']['delicious'] == 'on') ? "checked='checked'" : ""; ?>/>
-                                Delicious
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" name="show[reddit]" <?php echo (isset($settings['show']['reddit']) && $settings['show']['reddit'] == 'on') ? "checked='checked'" : ""; ?>/>
-                                Reddit
-                            </div>
-                            <div class="row">
-                                <input type="checkbox" name="show[linkedin]" <?php echo (isset($settings['show']['linkedin']) && $settings['show']['linkedin'] == 'on') ? "checked='checked'" : ""; ?>/>
-                                Linkedin
                             </div>
 
                         </div>

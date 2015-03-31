@@ -10,7 +10,7 @@ class OPS_Dashboard {
         <div class="wrap" id="ops-dashboard">
             <?php $settings = Off_Page_SEO::ops_get_settings(); ?>
             <h2 class="ops-h2">Off Page SEO - Dashboard</h2>
-            
+
             <div class="left-col" id="ops-rank-reporter">
                 <!--GRAPHS-->
                 <?php new OPS_Rank_Reporter(); ?>
@@ -35,7 +35,6 @@ class OPS_Dashboard {
         <div class="postbox">
             <h3 class="ops-h3">Your site's information</h3>
             <div class="inside ops-padding">
-
                 <?php if (isset($settings['show']['page_rank']) && $settings['show']['page_rank'] == 'on'): ?>
                     <div class="ops-line">
                         <div class="left-col">
@@ -61,110 +60,63 @@ class OPS_Dashboard {
                 <?php endif; ?>
 
 
-
-                <?php if (isset($settings['show']['facebook']) && $settings['show']['facebook'] == 'on'): ?>
-                    <div class="ops-line">
-                        <div class="left-col">
-                            Facebook Shares
-                        </div>
-                        <div class="right-col">
-                            <?php echo $settings['site_info']['facebook'] ?>
-                        </div>
+                <div class="ops-line">
+                    <div class="left-col">
+                        Total Shares
                     </div>
-                <?php endif; ?>
-
-
-
-                <?php if (isset($settings['show']['twitter']) && $settings['show']['twitter'] == 'on'): ?>
-                    <div class="ops-line">
-                        <div class="left-col">
-                            Twitter Shares
-                        </div>
-                        <div class="right-col">
-                            <?php echo $settings['site_info']['twitter'] ?>
-                        </div>
+                    <div class="right-col">
+                        <?php echo (isset($settings['site_info']['shares_total'])) ? $settings['site_info']['shares_total'] : "" ; ?>
                     </div>
-                <?php endif; ?>
+                </div>
 
-
-
-                <?php if (isset($settings['show']['google']) && $settings['show']['google'] == 'on'): ?>
-                    <div class="ops-line">
-                        <div class="left-col">
-                            Google Shares
-                        </div>
-                        <div class="right-col">
-                            <?php echo $settings['site_info']['google'] ?>
-                        </div>
+                <div class="ops-line">
+                    <div class="left-col">
+                        Facebook Shares
                     </div>
-                <?php endif; ?>
-
-
-
-                <?php if (isset($settings['show']['pinterest']) && $settings['show']['pinterest'] == 'on'): ?>
-                    <div class="ops-line">
-                        <div class="left-col">
-                            Pinterest
-                        </div>
-                        <div class="right-col">
-                            <?php echo $settings['site_info']['pinterest'] ?>
-                        </div>
+                    <div class="right-col">
+                        <?php echo (isset($settings['site_info']['shares_facebook'])) ? $settings['site_info']['shares_facebook'] : "" ; ?>
                     </div>
-                <?php endif; ?>
+                </div>
 
-
-
-                <?php if (isset($settings['show']['stumbleupon']) && $settings['show']['stumbleupon'] == 'on'): ?>
-                    <div class="ops-line">
-                        <div class="left-col">
-                            Stumbleupon
-                        </div>
-                        <div class="right-col">
-                            <?php echo $settings['site_info']['stumbleupon'] ?>
-                        </div>
+                <div class="ops-line">
+                    <div class="left-col">
+                        Twitter Shares
                     </div>
-                <?php endif; ?>
-
-
-                <?php if (isset($settings['show']['delicious']) && $settings['show']['delicious'] == 'on'): ?>
-                    <div class="ops-line">
-                        <div class="left-col">
-                            Delicious
-                        </div>
-                        <div class="right-col">
-                            <?php echo $settings['site_info']['delicious'] ?>
-                        </div>
+                    <div class="right-col">
+                            <?php echo (isset($settings['site_info']['shares_twitter'])) ? $settings['site_info']['shares_twitter'] : "" ; ?>
                     </div>
-                <?php endif; ?>
+                </div>
 
-
-
-                <?php if (isset($settings['show']['reddit']) && $settings['show']['reddit'] == 'on'): ?>
-                    <div class="ops-line">
-                        <div class="left-col">
-                            Reddit
-                        </div>
-                        <div class="right-col">
-                            <?php echo $settings['site_info']['reddit'] ?>
-                        </div>
+                <div class="ops-line">
+                    <div class="left-col">
+                        Google+ Shares
                     </div>
-                <?php endif; ?>
-
-
-
-                <?php if (isset($settings['show']['linkedin']) && $settings['show']['linkedin'] == 'on'): ?>
-                    <div class="ops-line">
-                        <div class="left-col">
-                            Linkedin
-                        </div>
-                        <div class="right-col">
-                            <?php echo $settings['site_info']['linkedin'] ?>
-                        </div>
+                    <div class="right-col">
+                        <?php echo (isset($settings['site_info']['shares_googleplus'])) ? $settings['site_info']['shares_googleplus'] : "" ; ?>
                     </div>
-                <?php endif; ?>
+                </div>
+
+                <div class="ops-line">
+                    <div class="left-col">
+                        Pocket Shares
+                    </div>
+                    <div class="right-col">
+                        <?php echo (isset($settings['site_info']['shares_pocket'])) ? $settings['site_info']['shares_pocket'] : "" ; ?>
+                    </div>
+                </div>
+
+                <div class="ops-line">
+                    <div class="left-col">
+                        Pinterest Shares
+                    </div>
+                    <div class="right-col">
+                        <?php echo (isset($settings['site_info']['shares_pinterest'])) ? $settings['site_info']['shares_pinterest'] : "" ; ?>
+                    </div>
+                </div>
 
 
                 <div class="site-lang">
+                    The stats above are for whole website. For specific pages, visit <a href="admin.php?page=ops_social_networks">Social Networks</a> page.<br/><br/>
                     Site language: <b><?php echo Off_Page_SEO::ops_get_language($settings['lang']) ?></b><br/>
                     Next scheduled check: <strong><?php echo date('F d, Y H:i:s', $settings['last_check'] + 259200); ?></strong>
                 </div>
@@ -173,7 +125,7 @@ class OPS_Dashboard {
         </div>
         <?php
     }
-    
+
     /**
      * Renders donation box
      * @param type $settings
