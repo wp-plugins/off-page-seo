@@ -19,9 +19,9 @@ Let's build better websites with Off Page SEO plugin!
 
 = Features =
 * Rank Reporter (checks rank in SERP every 3 days)
-* Track gained backlinks (every 3 days check if the links ares still present)
-* Track how many people came to your site using those backlinks
-* Counts how much did you spend for the backlinks
+* Track gained backlinks (every 3 days check if the links are still present)
+* Track how many people came to your site using these backlinks
+* Counts how much you spent on backlinks
 * Enhanced graphs for analysis of your position
 * Competitor analysis (using the most popular tools in the world)
 * Social Share counter (counts how many Likes and Follows you have on various social networks)
