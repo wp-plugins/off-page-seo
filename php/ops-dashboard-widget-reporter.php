@@ -67,9 +67,9 @@ class OPS_Dashboard_Widget_Reporter {
                     </div>
                 <?php endforeach; ?> 
                 <div class="ops-schedule">
-                    Last check: <strong><?php echo date('F d, Y H:i:s', $settings['last_check']); ?></strong>
+                    Last check: <strong><?php echo date(Off_Page_SEO::ops_get_date_format() . ' H:i:s', $settings['last_check']); ?></strong>
                     <br/>
-                    Next scheduled check: <strong><?php echo date('F d, Y H:i:s', $settings['last_check'] + 259200); ?></strong>
+                    Next scheduled check: <strong><?php echo date(Off_Page_SEO::ops_get_date_format() . ' H:i:s', $settings['last_check'] + 259200); ?></strong>
                 </div>
             <?php else: ?>
                 <a href="admin.php?page=ops_settings">Please specify the keywords and language in Settings.</a>

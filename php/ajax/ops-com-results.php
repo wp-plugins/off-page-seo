@@ -123,7 +123,7 @@ if ($html) {
 <?php else : ?>
     <div class="ops-com-results">
         <div class="error-message">
-            Oops! You've been temporarily marked as bot for this query. Try another one or see the results on Google directly using link bellow.
+            Oops! You've been temporarily marked as bot for this query. Try another one or see the results on Google directly using link below.
         </div>
         <div class="more-results">
             <a href="<?php echo $url ?>" class="button button-primary" target="_blank">See results on Google</a>

@@ -6,6 +6,7 @@ class OPS_Backlinks_Comment {
      * Initialization of Commenting class
      * */
     public function __construct() {
+        $lang = Off_Page_SEO::ops_get_lang();   
         ?>
         <div class="wrap" id="ops-commenting">
             <h2 class="ops-h2">Comment</h2>
@@ -20,8 +21,8 @@ class OPS_Backlinks_Comment {
                 <form action="" method="post">
                     <input type="text" name="query" placeholder="Please insert keyword" class="query" />
                     <input type="hidden" name="plugins_url" value="<?php echo plugins_url() ?>" />
-                    <input type="hidden" name="lang" value="<?php echo Off_Page_SEO::ops_get_lang() ?>" />
-                    <?php $queries = $this->ops_get_comment_queries(Off_Page_SEO::ops_get_lang()); ?>
+                    <input type="hidden" name="lang" value="<?php echo $lang ?>" />
+                    <?php $queries = $this->ops_get_comment_queries($lang); ?>
                     <select name="option">
                         <?php foreach ($queries as $key => $query): ?>
                             <option value="<?php echo $key ?>"><?php echo $query['name'] ?></option>
@@ -31,6 +32,12 @@ class OPS_Backlinks_Comment {
                 </form>
                 <span class="preloader"></span>
             </div>
+
+            <?php if ($this->ops_is_comment_supported($lang) == false): ?>
+                <span>
+                    <p>NOTE: We doest not support your language at the moment. If you want to help out bild this plugin, <a href="<?php echo Off_Page_SEO::$mother; ?>" target="_blank">give us a quote</a>.</p>
+                </span>
+            <?php endif; ?>
 
             <div class="postbox results">
                 <div class="branding branding-comments">
@@ -77,96 +84,100 @@ class OPS_Backlinks_Comment {
         <?php
     }
 
-    public static function ops_get_comment_queries($lang) {
-        switch ($lang) {
-            case 'en':
-                $output = array(
-                    'edu-blogs' => array(
-                        'name' => '.edu Blogs',
-                        'tail' => 'site:.edu inurl:blog "post a comment" -"you must be logged in"'
-                    ),
-                    'gov-blogs' => array(
-                        'name' => '.gov Blogs',
-                        'tail' => 'site:.gov inurl:blog "post a comment" -"you must be logged in"'
-                    ),
-                    'html-comments' => array(
-                        'name' => 'Anchor Text In Comment Blogs',
-                        'tail' => '"Allowed HTML tags:"'
-                    ),
-                    'comment-luv-premium' => array(
-                        'name' => 'CommentLuv Premium Blogs',
-                        'tail' => '"This blog uses premium CommentLuv" -"The version of CommentLuv on this site is no longer supported."'
-                    ),
-                    'do-follow-comments' => array(
-                        'name' => 'Do Follow Comment Blogs',
-                        'tail' => '"Notify me of follow-up comments?" "Submit the word you see below:"'
-                    ),
-                    'expression-engine' => array(
-                        'name' => 'Expression Engine Forums',
-                        'tail' => '"powered by expressionengine"'
-                    ),
-                    'hubpages' => array(
-                        'name' => 'Hubpages - Hot Hubs',
-                        'tail' => 'site:hubpages.com "hot hubs"'
-                    ),
-                    'keywordluv' => array(
-                        'name' => 'KeywordLuv Blogs',
-                        'tail' => '"Enter YourName@YourKeywords"'
-                    ),
-                    'livefyre' => array(
-                        'name' => 'LiveFyre Blogs',
-                        'tail' => '"get livefyre" "comment help" -"Comments have been disabled for this post"'
-                    ),
-                    'intensedebate' => array(
-                        'name' => 'Intense Debate Blogs',
-                        'tail' => '"if you have a website, link to it here" "post a new comment"'
-                    ),
-                    'squidoo-addtolist' => array(
-                        'name' => 'Squidoo lenses - Add To List',
-                        'tail' => 'site:squidoo.com "add to this list"'
-                    )
-                );
-               
-                break;
-            
-            case 'cs':
-                $output = array(
-                    'domain-kw' => array(
-                        'name' => 'Klíčové slovo v URL',
-                        'tail' => '"přidat komentář" inurl:%keyword%'
-                    ),
-                    'title-kw' => array(
-                        'name' => 'Klíčové slovo v titulku',
-                        'tail' => '"přidat komentář" intitle:%keyword%'
-                    ),
-                    'blog-cz' => array(
-                        'name' => 'Blog.cz komentáře',
-                        'tail' => 'site:blog.cz'
-                    ),
-                    'forum-kw' => array(
-                        'name' => 'Forum s klíčovým slovem',
-                        'tail' => '"forum" site:.cz'
-                    ),
-                    'forum-phpbb' => array(
-                        'name' => 'Forum phpBB s klíčovým slovem',
-                        'tail' => '"phpBB"'
-                    ),
-                    'forum-bbpress' => array(
-                        'name' => 'Forum BBpress s klíčovým slovem',
-                        'tail' => '"powered by BBpress"'
-                    ),
-                    'discuss-kw' => array(
-                        'name' => 'Diskuze s klíčovým slovem',
-                        'tail' => '"diskuze" site:.cz'
-                    ),
-                    'commentluv' => array(
-                        'name' => 'CommentLuv',
-                        'tail' => 'CommentLuv'
-                    ),
-                    
-                );
-                break;
+    public static function ops_is_comment_supported($lang) {
+        $supported = array('cs', 'en');
+        if (in_array($lang, $supported) == true) {
+            return true;
+        } else {
+            return false;
         }
+    }
+
+    public static function ops_get_comment_queries($lang) {
+        if ($lang == 'cs') {
+            $output = array(
+                'domain-kw' => array(
+                    'name' => 'Klíčové slovo v URL',
+                    'tail' => '"přidat komentář" inurl:%keyword%'
+                ),
+                'title-kw' => array(
+                    'name' => 'Klíčové slovo v titulku',
+                    'tail' => '"přidat komentář" intitle:%keyword%'
+                ),
+                'blog-cz' => array(
+                    'name' => 'Blog.cz komentáře',
+                    'tail' => 'site:blog.cz'
+                ),
+                'forum-kw' => array(
+                    'name' => 'Forum s klíčovým slovem',
+                    'tail' => '"forum" site:.cz'
+                ),
+                'forum-phpbb' => array(
+                    'name' => 'Forum phpBB s klíčovým slovem',
+                    'tail' => '"phpBB"'
+                ),
+                'forum-bbpress' => array(
+                    'name' => 'Forum BBpress s klíčovým slovem',
+                    'tail' => '"powered by BBpress"'
+                ),
+                'discuss-kw' => array(
+                    'name' => 'Diskuze s klíčovým slovem',
+                    'tail' => '"diskuze" site:.cz'
+                ),
+                'commentluv' => array(
+                    'name' => 'CommentLuv',
+                    'tail' => 'CommentLuv'
+                ),
+            );
+        } else {
+            $output = array(
+                'edu-blogs' => array(
+                    'name' => '.edu Blogs',
+                    'tail' => 'site:.edu inurl:blog "post a comment" -"you must be logged in"'
+                ),
+                'gov-blogs' => array(
+                    'name' => '.gov Blogs',
+                    'tail' => 'site:.gov inurl:blog "post a comment" -"you must be logged in"'
+                ),
+                'html-comments' => array(
+                    'name' => 'Anchor Text In Comment Blogs',
+                    'tail' => '"Allowed HTML tags:"'
+                ),
+                'comment-luv-premium' => array(
+                    'name' => 'CommentLuv Premium Blogs',
+                    'tail' => '"This blog uses premium CommentLuv" -"The version of CommentLuv on this site is no longer supported."'
+                ),
+                'do-follow-comments' => array(
+                    'name' => 'Do Follow Comment Blogs',
+                    'tail' => '"Notify me of follow-up comments?" "Submit the word you see below:"'
+                ),
+                'expression-engine' => array(
+                    'name' => 'Expression Engine Forums',
+                    'tail' => '"powered by expressionengine"'
+                ),
+                'hubpages' => array(
+                    'name' => 'Hubpages - Hot Hubs',
+                    'tail' => 'site:hubpages.com "hot hubs"'
+                ),
+                'keywordluv' => array(
+                    'name' => 'KeywordLuv Blogs',
+                    'tail' => '"Enter YourName@YourKeywords"'
+                ),
+                'livefyre' => array(
+                    'name' => 'LiveFyre Blogs',
+                    'tail' => '"get livefyre" "comment help" -"Comments have been disabled for this post"'
+                ),
+                'intensedebate' => array(
+                    'name' => 'Intense Debate Blogs',
+                    'tail' => '"if you have a website, link to it here" "post a new comment"'
+                ),
+                'squidoo-addtolist' => array(
+                    'name' => 'Squidoo lenses - Add To List',
+                    'tail' => 'site:squidoo.com "add to this list"'
+                )
+            );
+        }
+
         return $output;
     }
 

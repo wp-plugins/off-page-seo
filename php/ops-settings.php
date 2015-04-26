@@ -6,10 +6,11 @@ class OPS_Settings {
      * Initialization of Settings Class
      * */
     public function __construct() {
+        $settings = Off_Page_SEO::ops_get_settings();
 
         // if we are saving data from form
         if (isset($_POST['null'])) {
-            $this->ops_save_settings();
+            $this->ops_save_settings($settings);
         }
 
         // display message that settings was updated
@@ -40,19 +41,38 @@ class OPS_Settings {
      * Receive $_POST and saves it as serialized array into database
      * @global type $wpdb
      */
-    public function ops_save_settings() {
+    public function ops_save_settings($settings) {
         // perform test
         if (isset($_POST['ops-clear-date']) && $_POST['ops-clear-date'] == 'on') {
             $_POST['last_check'] = 0;
+            unset($_POST['ops-clear-date']);
         }
 
-        // update post meta
-        // secure graphs
+        // secure 
         if (isset($_POST['graphs'])) {
             $_POST['graphs'] = $this->ops_sanatize_graphs_inputs($_POST['graphs']);
         }
         if (isset($_POST['guest_posting'])) {
             $_POST['guest_posting'] = $this->ops_sanatize_guest_posting_inputs($_POST['guest_posting']);
+        }
+        $_POST['null'] = sanitize_text_field($_POST['null']);
+        $_POST['last_check'] = sanitize_text_field($_POST['last_check']);
+        $_POST['last_check_site_info'] = sanitize_text_field($_POST['last_check_site_info']);
+        $_POST['ops_share_timer'] = sanitize_text_field($_POST['ops_share_timer']);
+        $_POST['ops_all_shares_checked'] = sanitize_text_field($_POST['ops_all_shares_checked']);
+        $_POST['notification_email'] = sanitize_text_field($_POST['notification_email']);
+        $_POST['currency'] = sanitize_text_field($_POST['currency']);
+        $_POST['date_format'] = sanitize_text_field($_POST['date_format']);
+        $_POST['premium_code'] = sanitize_text_field($_POST['premium_code']);
+
+        // if premium code was changed, check site info
+        $settings['premium_code'] = (isset($settings['premium_code'])) ? $settings['premium_code'] : "";
+        if ($_POST['premium_code'] != $settings['premium_code']) {
+            $_POST['last_check_site_info'] = 0;
+        }
+
+        if (isset($_POST['reciprocal_timer'])) {
+            $_POST['reciprocal_timer'] = sanitize_text_field($_POST['reciprocal_timer']);
         }
 
         $data = serialize($_POST);
@@ -65,14 +85,17 @@ class OPS_Settings {
         if (isset($_POST['graphs'])) {
             foreach ($_POST['graphs'] as $graph) {
                 $db_results = $wpdb->get_results('SELECT * FROM ' . $wpdb->base_prefix . 'ops_rank_report WHERE url = "' . trim($graph['url']) . '" AND keyword = "' . trim($graph['keyword']) . '"', ARRAY_A);
-                if (!$db_results) {
+                if (!isset($db_results[0]['id'])) {
                     // if there are no rows in wp_ops_rank_report, add one
                     $data = array(
                         'url' => trim($graph['url']),
                         'keyword' => trim($graph['keyword']),
                         'positions' => serialize(array()),
-                        'post_id' => url_to_postid(trim($graph['url'])),
-                        'active' => 1
+                        'active' => 1,
+                        'links' => serialize(array()),
+                        'feature1' => null,
+                        'feature2' => null,
+                        'feature3' => null
                     );
                     $wpdb->insert($wpdb->base_prefix . 'ops_rank_report', $data);
                 }
@@ -104,8 +127,8 @@ class OPS_Settings {
         foreach ($graphs as $graph) {
             $sanatized[$n]['keyword'] = sanitize_text_field($graph['keyword']);
             $sanatized[$n]['url'] = sanitize_text_field($graph['url']);
-            $sanatized[$n]['master'] = (isset($graph['master']) ? $graph['master'] : "" );
-            $sanatized[$n]['volume'] = (isset($graph['volume']) ? $graph['volume'] : "" );
+            $sanatized[$n]['master'] = (isset($graph['master']) ? sanitize_text_field($graph['master']) : "" );
+            $sanatized[$n]['volume'] = (isset($graph['volume']) ? sanitize_text_field($graph['volume']) : "" );
             $n++;
         }
         return $sanatized;
@@ -129,8 +152,10 @@ class OPS_Settings {
     public function ops_render_settings_form() {
         ?>
         <div class="wrap" id="ops-settings">
-            <?php $settings = Off_Page_SEO::ops_get_settings(); ?>
-            <?php // echo "<pre>"; print_r($settings); echo "</pre>"; ?>
+
+            <?php $premium = Off_Page_SEO::ops_get_option('ops_premium'); ?>
+            <?php $is_premium = $premium['premium'] ?>
+            <?php $settings = Off_Page_SEO::ops_get_settings() ?>
             <h2 class="ops-h2">Settings</h2>
             <div class="ops-breadcrumbs">
                 <ul>
@@ -138,6 +163,33 @@ class OPS_Settings {
                     <li>Settings</li>
                 </ul>
             </div>
+
+            <?php if (isset($premium['before_premium']) && $premium['before_premium'] == 1 && $is_premium == 0): ?>
+                <div class="ops-before-premium">
+                    It seems you have been using this plugin before turning into premium. You can <a href="mailto:info@offpageseoplugin.com?subject=<?php echo 'Licence Code Redeem ' . get_home_url() ?>&body=<?php echo rawurlencode('Please send me licence code for my site :' . get_home_url()) ?>">redeem free licence code</a> for your website and 2 others for 1 year.
+                </div>
+            <?php endif; ?>
+
+
+            <?php if (isset($settings['premium_code']) && strlen($settings['premium_code']) > 0 && $is_premium == 0): ?>
+                <div class="ops-before-premium">
+                    Your licence code is not correct. If you purchased this code and it is not working, please <a href="mailto:info@offpageseoplugin.com?subject=My code is not working">contact us</a>.
+                </div>
+            <?php endif; ?>
+
+
+            <?php if (isset($settings['premium_code']) && strlen($settings['premium_code']) > 0 && $is_premium == 3): ?>
+                <div class="ops-before-premium">
+                    This licence code is already in use on 3 websites. If you want to remove it from any of them, please <a href="mailto:info@offpageseoplugin.com?subject=<?php echo 'Licence website change' . get_home_url() ?>&body=<?php echo rawurlencode('Please remove my old site from the licence : '.$settings['premium_code'] .'. Site to remove: ****FILL THE OLD SITE NAME**** My new one is: ' . get_home_url()) ?>">contact us.</a>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($settings['premium_code']) && strlen($settings['premium_code']) > 0 && $is_premium == 2): ?>
+                <div class="ops-before-premium">
+                    Your licence has expired. Please <a href="<?php echo Off_Page_SEO::$mother ?>/extend-licence?licence=<?php echo urlencode($settings['premium_code']) ?>" target="_blank">extend the licence</a> to continue using the plugin.
+                </div>
+            <?php endif; ?>
+
             <form method="post" action="">
                 <!--HIDDEN FIELD-->
                 <input type="hidden" value="yes" name="null" />
@@ -146,6 +198,7 @@ class OPS_Settings {
                 <input type="hidden" value="<?php echo $settings['last_check_site_info'] ?>" name="last_check_site_info" />
                 <input type="hidden" value="<?php echo (isset($settings['ops_share_timer'])) ? $settings['ops_share_timer'] : "0"; ?>" name="ops_share_timer" />
                 <input type="hidden" value="<?php echo (isset($settings['ops_all_shares_checked'])) ? $settings['ops_all_shares_checked'] : "0"; ?>" name="ops_all_shares_checked" />
+                <input type="hidden" value="<?php echo (isset($settings['reciprocal_timer'])) ? $settings['reciprocal_timer'] : "0"; ?>" name="reciprocal_timer" />
                 <!--RANKS-->
                 <input type="hidden" value="<?php echo $settings['site_info']['page_rank'] ?>" name="site_info[page_rank]" />
                 <input type="hidden" value="<?php echo $settings['site_info']['alexa_rank'] ?>" name="site_info[alexa_rank]" />
@@ -165,23 +218,56 @@ class OPS_Settings {
                 <div class="left-col">
 
                     <div class="postbox">
-                        <h3 class="ops-h3">Supported languages</h3>
+                        <h3 class="ops-h3">General settings</h3>
+                        <div class="ops-settings-premium">
+                            <?php if ($is_premium == 0 || $is_premium == 3): ?>
+                                <p>Unlock all features with premium version.</p>
+                            <?php else : ?>
+                                <p>Premium version is active.</p>
+                            <?php endif; ?>
+                            <input type="text" name="premium_code" value="<?php echo (isset($settings['premium_code'])) ? $settings['premium_code'] : ""; ?>" placeholder="LICENCE CODE"/>
+                            <?php if ($is_premium == 0 || $is_premium == 3): ?>
+                                <a href="<?php echo Off_Page_SEO::$mother; ?>" target="_blank" class="ops-buy">Get your code.</a>
+                            <?php else: ?>
+                                &nbsp; Licence code is valid until: <b><?php echo date(Off_Page_SEO::ops_get_date_format(), $premium['premium_expiration']); ?></b>
+                            <?php endif; ?>
+                            <div class="ops-clearfix"></div>
+                        </div>
                         <div class="ops-padding">
-                            <p>Please select your language.</p>
+                            <p>Select your language.</p>
                             <select name="lang">
                                 <?php $languages = Off_Page_SEO::ops_lang_array() ?>
                                 <?php foreach ($languages as $key => $value): ?>
                                     <option value="<?php echo $key ?>" <?php echo ($key == $settings['lang']) ? "selected" : ""; ?>><?php echo $value ?></option>
                                 <?php endforeach; ?>
                             </select>
+
                             <br/><br/>
-                            <p>Please select the Google domain you want to search in.</p>
+                            <p>Select the Google domain you want to search in.</p>
                             <select name="google_domain" class="select2">
                                 <?php $google_domains = Off_Page_SEO::ops_google_domains_array() ?>
                                 <?php foreach ($google_domains as $key => $value): ?>
                                     <option value="<?php echo $key ?>" <?php echo ($key == $settings['google_domain']) ? "selected" : ""; ?>><?php echo $value ?></option>
                                 <?php endforeach; ?>
                             </select>
+
+                            <br/><br/>
+                            <p>Notification email.</p>
+                            <input type="email" name="notification_email" value="<?php echo (isset($settings['notification_email'])) ? $settings['notification_email'] : ""; ?>" placeholder="your@email.com"/>
+
+                            <br/><br/>
+                            <p>Currency.</p>
+                            <input type="text" name="currency" value="<?php echo (isset($settings['currency'])) ? $settings['currency'] : ""; ?>" placeholder="$"/>
+
+                            <br/><br/>
+                            <p>Date format.</p>
+                            <select name="date_format" class="select2">
+                                <option value="m/d/Y" <?php echo (isset($settings['date_format']) && 'm/d/Y' == $settings['date_format']) ? "selected" : ""; ?>>04/16/2015</option>
+                                <option value="F d, Y" <?php echo (isset($settings['date_format']) && 'F d, Y' == $settings['date_format']) ? "selected" : ""; ?>>April 16, 2015</option>
+                                <option value="j.n.Y" <?php echo (isset($settings['date_format']) && 'j.n.Y' == $settings['date_format']) ? "selected" : ""; ?>>16.4.2015</option>
+                                <option value="jS M Y" <?php echo (isset($settings['date_format']) && 'jS M Y' == $settings['date_format']) ? "selected" : ""; ?>>16th Apr 2015</option>
+                            </select>
+
                         </div>
                     </div>
 
@@ -196,7 +282,6 @@ class OPS_Settings {
                                 $number = 0;
                             }
                             ?>
-
                             <div class="ops-wrapper" data-number="<?php echo $number ?>">
                                 <?php $n = 0; ?>
                                 <?php if (isset($settings['graphs'])): ?>
@@ -209,7 +294,7 @@ class OPS_Settings {
 
                                             </div>
                                             <div class="options">
-                                                Show in master graph:
+                                                Show in master graph:&nbsp;
                                                 <input type="checkbox" name="graphs[<?php echo $n ?>][master]" <?php echo (isset($graph['master']) && $graph['master'] == 'on') ? "checked" : ""; ?> />
                                                 Search volume:
                                                 <input type="number" name="graphs[<?php echo $n ?>][volume]" placeholder="Volume" value="<?php echo (isset($graph['volume'])) ? $graph['volume'] : ""; ?>" class="ops-volume" />
@@ -219,27 +304,22 @@ class OPS_Settings {
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </div>
-                            <a href="#" class="button add-new-kw">Add new</a>
+                            <a href="#" class="button add-new-kw">Add new keyword</a>
                             <div class="ops-delete">
-                                <input type="checkbox" name="ops-delete-reports" /> Delete all reports.
+                                <input type="checkbox" name="ops-delete-reports" /> Delete data from the reports.
                             </div>
                             <div class="ops-delete">
                                 <input type="checkbox" name="ops-clear-date" /> Perform ranking test next time the user visits your site <i>(don't use frequently)</i>. 
                             </div>
+                            <div class="ops-reciprocal-settings">
+                                <input type="checkbox" name="reciprocal_control" <?php echo (isset($settings['reciprocal_control']) && $settings['reciprocal_control'] == 'on') ? "checked" : ""; ?> /> Every 3 days check if the reported backlinks are still present (reciprocal check).
+                            </div>
                             <div class="max-exec">
-                                Max server execution time : <b><?php echo ini_get('max_execution_time'); ?>s</b>, max number of keywords should be <b><?php echo $this->ops_get_recommended_kws(ini_get('max_execution_time')) ?></b> depending on your ranking in SERP (use more, if higher).
+                                Max server execution time : <b><?php echo ini_get('max_execution_time'); ?>s</b>, max number of keywords should be <b><?php echo $this->ops_get_recommended_kws(ini_get('max_execution_time')) ?></b>.
                             </div>
                         </div>
                     </div>
 
-
-                    <div class="postbox" id="ops-donate-box-settings">
-                        <h3 class="ops-h3">Donate Box</h3>
-                        <div class="ops-padding">
-                            <p>If you don't want to support us or you have already (thank you!), you can hide the donation message.</p>
-                            <input type="checkbox" name="donate" <?php echo (isset($settings['donate']) && $settings['donate'] == 'on') ? "checked='checked'" : ""; ?>/>
-                        </div>
-                    </div>
 
                     <input type="submit" class="button button-primary" value="Save" />
 

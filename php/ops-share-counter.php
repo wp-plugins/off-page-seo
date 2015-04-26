@@ -9,7 +9,6 @@ class OPS_Share_Counter {
         if (!is_array($post_types)) {
             return;
         }
-
         // check if we have timers set up
         $settings = Off_Page_SEO::ops_get_settings();
 
@@ -28,7 +27,7 @@ class OPS_Share_Counter {
          * INSETS AJAX
          */
         if ($timer < time() && $all_checked == 0) { // if we are in state of initial control
-            $timer = time() + 20;
+            $timer = time() + 40;
             Off_Page_SEO::ops_update_settings('ops_share_timer', $timer);
 
             // ajax script
@@ -111,7 +110,6 @@ class OPS_Share_Counter {
          * PRE - QUERY
          */
         $post_types = Off_Page_SEO::ops_get_post_types();
-
         /*
          * MAIN ARGS - ALL CHECK
          */
@@ -128,11 +126,10 @@ class OPS_Share_Counter {
             ),
         );
         $wp_query = new WP_Query($args);
-
         if ($wp_query->have_posts()) { // if we found posts to check
             while ($wp_query->have_posts()) {
                 $wp_query->the_post();
-
+                
                 $shares = self::ops_api_multi_request(get_the_permalink());
                 update_post_meta(get_the_ID(), 'ops_shares', $shares);
 
@@ -143,9 +140,7 @@ class OPS_Share_Counter {
 
                 update_post_meta(get_the_ID(), 'ops_shares_total', $total);
 
-
-                $new_timer = time();
-                update_post_meta(get_the_ID(), 'ops_share_timer', $new_timer);
+                update_post_meta(get_the_ID(), 'ops_share_timer', time());
             }
         } else {
             /*
@@ -174,9 +169,7 @@ class OPS_Share_Counter {
 
         update_post_meta($_POST['pid'], 'ops_shares_total', $total);
 
-
-        $new_timer = time();
-        update_post_meta($pid, 'ops_share_timer', $new_timer);
+        update_post_meta($pid, 'ops_share_timer', time());
 
         wp_die();
     }

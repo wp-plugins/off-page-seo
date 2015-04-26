@@ -8,7 +8,6 @@ class OPS_Social_Networks {
     public function __construct() {
         $settings = Off_Page_SEO::ops_get_settings();
         ?>
-
         <div class="wrap" id="ops-social-networks">
             <?php ?>
             <h2 class="ops-h2">Social Networks</h2>
@@ -18,12 +17,8 @@ class OPS_Social_Networks {
                     <li>Social Networks</li>
                 </ul>
             </div>
-            <p>Social share counts are displayed bellow. </p>
             <?php $this->ops_render_shares($settings); ?>
-            
         </div>
-
-
         <?php
     }
 
@@ -34,20 +29,38 @@ class OPS_Social_Networks {
         $post_types = Off_Page_SEO::ops_get_post_types();
         if (!isset($post_types) || !is_array($post_types)) {
             echo "Please specify post types you want to count shares for in Settings.";
+            return;
         }
 
         $args = array(
             'post_type' => $post_types,
             'orderby' => 'date',
             'order' => 'DESC',
-            'posts_per_page' => 1000,
-            'meta_query' => array(
+            'posts_per_page' => -1
+        );
+
+        if (isset($_GET['show']) && $_GET['show'] == 'all') {
+            $args['meta_query'] = array(
                 array(
                     'key' => 'ops_shares',
                     'compare' => 'EXISTS',
                 ),
-            ),
-        );
+            );
+        } else {
+            $args['meta_query'] = array(
+                'relation' => 'AND',
+                array(
+                    'key' => 'ops_shares_total',
+                    'value' => 0,
+                    'type' => 'numeric',
+                    'compare' => '>'
+                ),
+                array(
+                    'key' => 'ops_shares',
+                    'compare' => 'EXISTS',
+                )
+            );
+        }
         $wp_query = new WP_Query($args);
         ?>
         <?php if ($wp_query->have_posts()) : ?>
@@ -69,13 +82,13 @@ class OPS_Social_Networks {
                 <thead> 
                     <tr> 
                         <th>Published</th> 
-                        <th>Title</th> 
-                        <th class="soc-fb">FB</th> 
-                        <th class="soc-tw">Tw</th> 
-                        <th class="soc-go">Google</th> 
-                        <th class="soc-poc">Pocket</th> 
-                        <th class="soc-pin">Pinterest</th> 
-                        <th>Total</th> 
+                        <th>Title</th>
+                        <th class="soc-fb">FB</th>
+                        <th class="soc-tw">Tw</th>
+                        <th class="soc-go">Google</th>
+                        <th class="soc-poc">Pocket</th>
+                        <th class="soc-pin">Pinterest</th>
+                        <th>Total</th>
                     </tr> 
                 </thead> 
                 <tbody> 
@@ -84,11 +97,10 @@ class OPS_Social_Networks {
                         $meta = get_post_meta(get_the_ID());
                         $shares = unserialize($meta['ops_shares'][0]);
                         $shares_total = $meta['ops_shares_total'][0];
-//                        delete_post_meta(get_the_ID(), 'ops_shares');
                         ?>
                         <tr> 
-                            <td><?php the_time('F d, Y') ?></td> 
-                            <td><a href="<?php the_permalink()?>" target="_blank"><?php the_title() ?></a><a href="post.php?post=<?php echo get_the_ID() ?>&action=edit" target="_blank" class="edit">Edit</a></td> 
+                            <td><?php the_time(Off_Page_SEO::ops_get_date_format()) ?></td> 
+                            <td><a href="<?php the_permalink() ?>" target="_blank"><?php the_title() ?></a></td> 
                             <td class="ops-center"><?php echo $shares['count']['facebook'] ?></td> 
                             <td class="ops-center"><?php echo $shares['count']['twitter'] ?></td> 
                             <td class="ops-center"><?php echo $shares['count']['googleplus'] ?></td> 
@@ -100,8 +112,36 @@ class OPS_Social_Networks {
                     <?php endwhile; ?>
                 </tbody> 
             </table>
+
+            <?php
+            if (!isset($_GET['show'])) {
+                $args_all = array(
+                    'post_type' => $post_types,
+                    'orderby' => 'date',
+                    'order' => 'DESC',
+                    'posts_per_page' => -1
+                );
+
+                $args_all['meta_query'] = array(
+                    'relation' => 'AND',
+                    array(
+                        'key' => 'ops_shares_total',
+                        'value' => 0,
+                        'type' => 'numeric',
+                        'compare' => '='
+                    ),
+                    array(
+                        'key' => 'ops_shares',
+                        'compare' => 'EXISTS',
+                    )
+                );
+                $wp_query_all = new WP_Query($args_all);
+                
+                echo '<div class="ops-shares-others"><b>' . $wp_query_all->found_posts . "</b> other posts on your website does not have any shares. <a href='admin.php?page=ops_social_networks&show=all'>Show them all.</a></div>";
+            }
+            ?>
         <?php else: ?>
-            Please set up <a href="admin.php?page=ops_settings">post types</a> you want to track and let the people browse your site. They will automatically trigger the scripts that will count the shares from the social APIs.
+            You don't have any shares or shares was not counted yet. Browse your website and come back later.
         <?php endif; ?>
 
 

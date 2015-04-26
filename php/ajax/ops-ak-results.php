@@ -10,8 +10,7 @@ $pr = new Page_Rank();
 $ar = new Alexa_Rank();
 $n = 1;
 
-
-$url = 'http://www.google.'.$settings['google_domain'].'/search?hl=' . $_POST["lang"] . '&start=0&q=' . urlencode($_POST['query']) . '&num=20';
+$url = 'http://www.google.'.$settings['google_domain'].'/search?hl=' . $settings['lang'] . '&start=0&q=' . urlencode($_POST['query']) . '&num=20';
 $str = ops_curl($url);
 $html = str_get_html($str);
 $linkObjs = $html->find('h3.r a');
@@ -81,8 +80,8 @@ foreach ($linkObjs as $linkObj) {
             <div class="google-like">
                 <a href="<?php echo $result['link']; ?>" target="_blank" class="site"><?php echo $result['title']; ?></a>
                 <div class="link">
-                    <?php echo mb_substr(strip_tags($result['link']), 0, 90, 'UTF-8'); ?>
-                    <?php echo (strlen($result['link']) > 90) ? "..." : ""; ?>
+                    <?php echo mb_substr(strip_tags($result['link']), 0, 60, 'UTF-8'); ?>
+                    <?php echo (strlen($result['link']) > 60) ? "..." : ""; ?>
                 </div>
 
             </div>

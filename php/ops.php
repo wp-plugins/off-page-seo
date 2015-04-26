@@ -13,12 +13,33 @@ class Off_Page_SEO {
     public function __construct() {
 
         add_action('wp_dashboard_setup', array($this, 'ops_add_dashboard_widgets'));
-        
+
         add_action('add_meta_boxes', array($this, 'ops_add_post_meta_box_shares'));
 
         add_action('admin_menu', array($this, 'init'));
 
         add_action('init', array($this, 'ops_cache_site_info'));
+        
+        add_filter('plugin_action_links_off-page-seo/off-page-seo.php', array($this, 'ops_add_settings_link'));
+        
+        // on admin pages, check reciprocal backlinks
+        if (is_admin()) {
+            add_action('admin_footer', array($this, 'ops_reciprocal_cron'));
+        }
+        
+    }
+
+    public function ops_add_settings_link($links) {
+        $mylinks = array(
+            '<a href="' . admin_url('admin.php?page=ops_settings') . '">Settings</a>',
+        );
+        return array_merge($links, $mylinks);
+    }
+
+    public static function ops_start_session() {
+        if (!session_id()) {
+            session_start();
+        }
     }
 
     /**
@@ -56,16 +77,13 @@ class Off_Page_SEO {
      * Adds meta boxes with shares
      */
     public function ops_add_post_meta_box_shares() {
-        
+
         $meta_box = new OPS_Meta_Box_Shares;
         $settings = self::ops_get_settings();
         $post_types = $settings['post_types'];
         foreach ($post_types as $post_type) {
             add_meta_box(
-                    'ops-share-counter-box',
-                    esc_html__('Social Networks', 'ops'), 
-                    array($meta_box, 'init'), 
-                    $post_type, // Admin page (or post type)
+                    'ops-share-counter-box', esc_html__('Social Networks', 'ops'), array($meta_box, 'init'), $post_type, // Admin page (or post type)
                     'side', // Context
                     'default'         // Priority
             );
@@ -136,23 +154,20 @@ class Off_Page_SEO {
         new OPS_Settings;
     }
 
+    public static function ops_get_date_format() {
+        $settings = Off_Page_SEO::ops_get_settings();
+        if (isset($settings['date_format'])) {
+            return $settings['date_format'];
+        } else {
+            return 'F d, Y';
+        }
+    }
+
     /**
      * Runs every 3 days and updates positions in Google
      */
     public static function ops_position_cron() {
-
-        $settings = Off_Page_SEO::ops_get_settings();
-
-        $now = time();
-        $diff = $now - $settings['last_check'];
-        if ($diff > 259200 && !is_admin()) { // 259200
-            // update last check first
-            $settings['last_check'] = $now;
-            self::ops_update_option('ops_settings', serialize($settings));
-
-            // insert iframe
-            add_action('wp_footer', array('Off_Page_SEO', 'ops_update_positions_cron'));
-        }
+        add_action('wp_footer', array('Off_Page_SEO', 'ops_update_positions_cron'));
     }
 
     /**
@@ -178,6 +193,51 @@ class Off_Page_SEO {
     }
 
     /**
+     * First it inserts Iframe - in case there is some error, it will not crash the page
+     */
+    public static function ops_reciprocal_cron() {
+        $settings = self::ops_get_settings();
+        if (!isset($settings['reciprocal_timer'])) {
+            $settings['reciprocal_timer'] = 0;
+        }
+        if ($settings['reciprocal_timer'] < time() && isset($settings['reciprocal_control']) && $settings['reciprocal_control'] == 'on' && self::ops_is_premium() == 1) {
+            ?>
+            <script>
+                jQuery(document).ready(function ($) {
+                    var doCron = '1';
+                    $.ajax({
+                        url: '<?php echo plugins_url('off-page-seo/php/ajax/ops-reciprocal.php') ?>',
+                        type: "POST",
+                        data: {doCron: doCron},
+                        beforeSend: function () {
+                            $('body').append('<div class="ops-recip-check"><span>Please wait while we check backlinks. <br/>This can occur couple times now in admin area.<span></div>');
+                            $('body').find('.ops-recip-check').fadeIn(500);
+                        },
+                        success: function (data) {
+                            //                            $('.postbox').html(data);
+                            $('body').find('.ops-recip-check').html('<span>Thank you.<span>');
+                            setTimeout(function () {
+                                $('body').find('.ops-recip-check').fadeOut(500, function () {
+                                    $(this).remove();
+                                });
+                            }, 500);
+                        },
+                        error: function () {
+                            $('body').find('.ops-recip-check').html('<span>Error, contact author of the plugin.<span>');
+                            setTimeout(function () {
+                                $('body').find('.ops-recip-check').fadeOut(500, function () {
+                                    $(this).remove();
+                                });
+                            }, 500);
+                        }
+                    });
+                });
+            </script>
+            <?php
+        }
+    }
+
+    /**
      * Recognize if the site is multisite. It returns either blog settings or page settings.
      * returns: array
      */
@@ -189,6 +249,23 @@ class Off_Page_SEO {
         }
 
         return $settings;
+    }
+
+    /**
+     * Recognize if the site is multisite. It returns either blog settings or page settings.
+     * returns: array
+     */
+    public static function ops_is_premium() {
+        if (is_multisite()) {
+            $premium = unserialize(get_blog_option(get_current_blog_id(), 'ops_premium'));
+        } else {
+            $premium = unserialize(get_site_option('ops_premium'));
+        }
+        if (isset($premium['premium']) && $premium['premium'] == 1) {
+            return $premium['premium'];
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -223,7 +300,12 @@ class Off_Page_SEO {
         $now = time();
         $diff = $now - $settings['last_check_site_info'];
         $home = get_home_url();
-        if ($diff > 86400) { //86400
+        if ($diff > 172800) { //86400
+            // first save timer to prevent other testings
+            $settings['last_check_site_info'] = $now;
+            Off_Page_SEO::ops_update_option('ops_settings', serialize($settings));
+
+            // check alexa and page rank
             $pr = new Page_Rank();
             $ar = new Alexa_Rank();
 
@@ -234,16 +316,59 @@ class Off_Page_SEO {
             $settings['site_info']['page_rank'] = $page_rank;
             $settings['site_info']['alexa_rank'] = $alexa_rank;
 
+            $settings['premium_code'] = isset($settings['premium_code']) ? $settings['premium_code'] : "";
             // check for GB
-            $url = Off_Page_SEO::$mother . '/check?site_url=' . urlencode(get_home_url());
+            $url = Off_Page_SEO::$mother . '/api/check-site/?site_url=' . urlencode(get_home_url()) . '&licence_key=' . $settings['premium_code'];
+
+            // GET DATA FROM MOTHER
             $str = ops_curl($url);
-            $html = str_get_html($str);
-            if (strpos($html, 'IS')) {
+            $html = new simple_html_dom();
+            $html->load($str, true, false);
+            foreach ($html->find('div') as $d) {
+                $response = json_decode($d->plaintext);
+                break;
+            }
+
+
+            // some error on mother website
+            if (!isset($response)) {
+                return;
+            }
+
+
+            // SET GUESTPOST
+            if ($response->guestpost == 1) {
                 $settings['site_info']['guest_posting'] = true;
             } else {
                 $settings['site_info']['guest_posting'] = false;
             }
 
+            // SET PREMIUM
+            $premium = array();
+            $premium['premium_expiration'] = (isset($response->premium_expiration) && strlen($response->premium_expiration) > 0) ? $response->premium_expiration : 0;
+            if ($response->premium == 1) {
+                $premium['premium'] = '1';
+                // if the code has expired
+                if ($response->premium_expiration < time()) {
+                    $premium['premium'] = '2';
+                }
+            } elseif ($response->premium == 3) {
+                $premium['premium'] = '3';
+            } else {
+                $premium['premium'] = '0';
+            }
+
+
+            // check if user had plugin before turning into premium
+            if ($response->before_premium == 1) {
+                $premium['before_premium'] = 1;
+            } else {
+                $premium['before_premium'] = 0;
+            }
+
+            Off_Page_SEO::ops_update_option('ops_premium', serialize($premium));
+
+            // SET SOCIAL SHARES
             $fb = 0;
             $tw = 0;
             $go = 0;
@@ -317,10 +442,11 @@ class Off_Page_SEO {
      */
     public static function ops_get_option($option) {
         if (is_multisite()) {
-            get_blog_option(get_current_blog_id(), $option);
+            $return = unserialize(get_blog_option(get_current_blog_id(), $option));
         } else {
-            get_site_option($option);
+            $return = unserialize(get_site_option($option));
         }
+        return $return;
     }
 
     /**

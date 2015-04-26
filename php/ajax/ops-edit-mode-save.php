@@ -4,26 +4,41 @@ require_once('../../../../../wp-load.php');
 require_once('../ops.php');
 require_once('../ops-rank-reporter.php');
 $settings = Off_Page_SEO::ops_get_settings();
-
 $n = 0;
-$dates = array(
-    'today' => time(),
-    'yesterday' => time() - 86400,
-    'three-days-ago' => time() - 259200,
-    'week-ago' => time() - 604800
-);
 if (isset($_POST['links'])) {
     foreach ($_POST['links'] as $link) {
         $output[$n]['url'] = sanitize_text_field($link['url']);
         $output[$n]['type'] = sanitize_text_field($link['type']);
         $output[$n]['price'] = sanitize_text_field($link['price']);
-        
-        if (is_numeric($link['date'])) {
-            $output[$n]['date'] = $link['date'];
+
+        if (isset($link['reciprocal'])) {
+            $output[$n]['reciprocal'] = 1;
         } else {
-            $date = $link['date'];
-            $output[$n]['date'] = $dates[$date];
+            $output[$n]['reciprocal'] = 0;
         }
+        
+        if (isset($link['reciprocal_referer'])) {
+            $output[$n]['reciprocal_referer'] = sanitize_text_field($link['reciprocal_referer']);
+        } else {
+            $output[$n]['reciprocal_referer'] = 0;
+        }
+        
+        if (isset($link['reciprocal_status'])) {
+            $output[$n]['reciprocal_status'] = sanitize_text_field($link['reciprocal_status']);
+        } else {
+            $output[$n]['reciprocal_status'] = 4;
+        }
+
+        if ($link['date'] == '') {
+            $date = time();
+        } else {
+            $date = strtotime(sanitize_text_field($link['date']));
+        }
+        
+        $output[$n]['comment'] = sanitize_text_field($link['comment']);
+
+        $output[$n]['date'] = sanitize_text_field($date);
+
         $n++;
     }
 } else {

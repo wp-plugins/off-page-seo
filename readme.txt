@@ -2,14 +2,14 @@
 Contributors: proka
 Stable tag: trunk
 Plugin URI: http://www.offpageseoplugin.com/
-Description: Turn your WordPress site into the ultimate SEO tool! Monitor SERP progress, get backlinks, join the guest posting network, analyze competitors, and much more.
-Version: 1.2.0.
-Tags: seo, off page, backlinks, serp, google, rank reporter, rank checker, rank, guest posting, guest blogging
+Description: Turn your WordPress site into the ultimate SEO tool! Monitor SERP progress, get backlinks, track your backlinks, analyze competitors, and much more.
+Version: 2.0.0.
+Tags: seo, off page, backlinks, serp, google, rank reporter, rank checker, rank, guest posting, guest blogging, reciprocal check, track backlinks, backlinks costs, tracker, rankings
 Tested up to: 4.1.0
 Requires at least: 3.0.1
 Author: Jakub Glos
 Author URI: http://www.offpageseoplugin.com/
-License: GPLv2
+License: CC-NC-ND
 
 Turn your WordPress site into the ultimate SEO tool! Monitor SERP progress, get backlinks, join the guest posting network, analyze competitors, and much more.
 
@@ -19,8 +19,11 @@ Let's build better websites with Off Page SEO plugin!
 
 = Features =
 * Rank Reporter (checks rank in SERP every 3 days)
-* Track gained backlinks and its influence
-* Competitor Analysis (using the most popular tools in the world)
+* Track gained backlinks (every 3 days check if the links ares still present)
+* Track how many people came to your site using those backlinks
+* Counts how much did you spend for the backlinks
+* Enhanced graphs for analysis of your position
+* Competitor analysis (using the most popular tools in the world)
 * Social Share counter (counts how many Likes and Follows you have on various social networks)
 * Page and Alexa Rank Checker (checks every day for a change in PR or Alexa Rank)
 * Backlink opportunities (daily update of backlink opportunities)
@@ -33,7 +36,7 @@ Let's build better websites with Off Page SEO plugin!
 = Supported languages =
 Plugin supports all languages for search results, rank reports, guest posting.
 
-For backlinks and commenting opportunities we currently support the languages listed bellow. You are most welcome to help us with developing this plugin.
+For backlinks and commenting opportunities we currently support the languages listed below. You are most welcome to help us with developing this plugin.
 
 * English 
 * Czech
@@ -44,18 +47,26 @@ Installation
 
 1. Download and install plugin.
 2. Specify the keywords in Settings.
-3. Specify the social metrics you want to follow.
+3. Specify the post types to count shares for.
 4. Enjoy other tools!
 
 == Frequently Asked Questions ==
 
 == Screenshots ==
-1. Competitor Analysis
-2. Dashboard with Rank Reporter
-3. Seach related commenting opportunitites
-4. Knowledge Base of most interesting articles found on internet
+1. Plugin introduction.
 
 == Changelog ==
+
+= 2.0.0. =
+* Going premium, in free mode 2 keywords are available
+* New branding image
+* Reciprocal backlink check
+* Total backlink costs
+* Counts how many people came to your site using reported backlinks
+* Comments for backlinks
+* Enhanced graphs, anlytic tools
+* Datepicker for the reported backlink
+* Social shares with 0 shares are hidden by default
 
 = 1.2.0. =
 * Social Share counter for individual pages, update of rank reporter.

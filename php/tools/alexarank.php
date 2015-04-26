@@ -31,7 +31,6 @@ if (!class_exists('Alaxa_Rank')):
             curl_close($ch);
 
             $xml = new SimpleXMLElement($data);
-
             //Get popularity node
             $popularity = $xml->xpath("//POPULARITY");
 

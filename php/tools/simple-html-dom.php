@@ -692,7 +692,6 @@ protected function parse_selector($selector_string) {
 
     $selectors = array();
     $result = array();
-//print_r($matches);
 
     foreach ($matches as $m) {
         $m[0] = trim($m[0]);
