@@ -9,9 +9,15 @@ class OPS_Dashboard {
         ?>
         <div class="wrap" id="ops-dashboard">
             <?php $settings = Off_Page_SEO::ops_get_settings(); ?>
+            <?php $premium = Off_Page_SEO::ops_get_option('ops_premium'); ?>
             <h2 class="ops-h2">Off Page SEO - Dashboard</h2>
-            
+
             <div class="left-col" id="ops-rank-reporter">
+                <?php if (isset($premium['before_premium']) && $premium['before_premium'] == 1 && Off_Page_SEO::ops_is_premium() == 0): ?>
+                    <div class="ops-before-premium">
+                        It seems you have been using this plugin before turning into premium. You can <a href="mailto:info@offpageseoplugin.com?subject=<?php echo 'Licence Code Redeem ' . get_home_url() ?>&body=<?php echo rawurlencode('Please send me licence code for my site :' . get_home_url()) ?>">redeem free licence code</a> for your website and 2 others for 1 year.
+                    </div>
+                <?php endif; ?>
                 <!--GRAPHS-->
                 <?php new OPS_Rank_Reporter(); ?>
             </div>

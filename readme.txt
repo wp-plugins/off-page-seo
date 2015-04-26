@@ -11,7 +11,7 @@ Author: Jakub Glos
 Author URI: http://www.offpageseoplugin.com/
 License: CC-NC-ND
 
-Turn your WordPress site into the ultimate SEO tool! Monitor SERP progress, get backlinks, join the guest posting network, analyze competitors, and much more.
+Turn your WordPress site into the ultimate SEO tool! Monitor SERP progress, get backlinks, track your backlinks, analyze competitors, and much more.
 
 == Description ==
 
