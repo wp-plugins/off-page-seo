@@ -8,9 +8,7 @@ $data = OPS_Rank_Reporter::ops_get_row_data($_POST['rowId']);
 $links = unserialize($data['links']);
 if (is_array($links) && count($links) != 0) {
 // sort according to date
-    usort($links, function($a, $b) {
-        return $b['date'] - $a['date'];
-    });
+    usort($links, create_function( '$a, $b', 'return $b[\'date\'] - $a[\'date\'];'));
 }
 ?>
 <form method="post" action="" class="ops-backlink-edit" data-count="<?php echo count($links) ?>">

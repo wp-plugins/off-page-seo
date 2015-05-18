@@ -7,7 +7,6 @@ class OPS_Settings {
      * */
     public function __construct() {
         $settings = Off_Page_SEO::ops_get_settings();
-
         // if we are saving data from form
         if (isset($_POST['null'])) {
             $this->ops_save_settings($settings);
@@ -180,7 +179,7 @@ class OPS_Settings {
 
             <?php if (isset($settings['premium_code']) && strlen($settings['premium_code']) > 0 && $is_premium == 3): ?>
                 <div class="ops-before-premium">
-                    This licence code is already in use on 3 websites. If you want to remove it from any of them, please <a href="mailto:info@offpageseoplugin.com?subject=<?php echo 'Licence website change' . get_home_url() ?>&body=<?php echo rawurlencode('Please remove my old site from the licence : '.$settings['premium_code'] .'. Site to remove: ****FILL THE OLD SITE NAME**** My new one is: ' . get_home_url()) ?>">contact us.</a>
+                    This licence code is already in use on 3 websites. If you want to remove it from any of them, please <a href="mailto:info@offpageseoplugin.com?subject=<?php echo 'Licence website change' . get_home_url() ?>&body=<?php echo rawurlencode('Please remove my old site from the licence : ' . $settings['premium_code'] . '. Site to remove: ****FILL THE OLD SITE NAME**** My new one is: ' . get_home_url()) ?>">contact us.</a>
                 </div>
             <?php endif; ?>
 
@@ -364,8 +363,12 @@ class OPS_Settings {
                                     <?php endforeach; ?>
                                 </div>
                             </div>
-                            <div class="ops-clearfix">
-
+                            <div class="ops-clearfix"></div>
+                            <div class="row">
+                                <br/><br/>
+                                Sometimes the plugin doesn't work because of your hosting limits. Try to uncheck <i>Control shares</i> to relieve the hosting (you need to wait a while after doing that).
+                                <br/><br/>
+                                <input type="checkbox" name="control_shares" <?php echo (isset($settings['control_shares']) && $settings['control_shares'] == 'on') ? "checked" : ""; ?> /> Control shares
                             </div>
                         </div>
                     </div>

@@ -4,16 +4,16 @@
   Plugin Name: Off Page SEO
   Plugin URI: http://www.offpageseoplugin.com
   Description: Provides lot of stools to help you with the off-page SEO.
-  Version: 2.0.0.
+  Version: 2.0.1.
   Author: Jakub Glos
   Author URI: http://www.offpageseoplugin.com
   License: CC-NC-ND
   Text Domain: off-page-seo
  */
 
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(-1);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(-1);
 // no need on cron job
 if (defined('DOING_CRON') || isset($_GET['doing_wp_cron'])) {
     return;
@@ -90,14 +90,13 @@ if (!isset($_SESSION['ops_referer']) && isset($_SERVER['HTTP_REFERER'])) {
  *  DO CRONS!
  */
 $settings = Off_Page_SEO::ops_get_settings();
-
 $diff = time() - $settings['last_check'];
 if ($diff > 259200 && !is_admin()) { // 259200
     // insert iframe
     Off_Page_SEO::ops_position_cron();
 } else {
     /* Create Class Share Counter */
-    if (!is_admin()) {
+    if (!is_admin() && isset($settings['control_shares']) && $settings['control_shares'] == 'on') {
         new OPS_Share_Counter();
     }
 }
@@ -155,6 +154,7 @@ function ops_on_activate() {
             'ops_share_timer' => 0,
             'ops_all_shares_checked' => 0,
             'reciprocal_control' => '',
+            'control_shares' => '',
             'premium_code' => '',
             'site_info' => array(
                 'page_rank' => 0,

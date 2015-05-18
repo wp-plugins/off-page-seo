@@ -81,6 +81,10 @@ class Off_Page_SEO {
         $meta_box = new OPS_Meta_Box_Shares;
         $settings = self::ops_get_settings();
         $post_types = $settings['post_types'];
+        if(!is_array($post_types) || count($post_types) == 0){
+            $post_types = array();
+        }
+        
         foreach ($post_types as $post_type) {
             add_meta_box(
                     'ops-share-counter-box', esc_html__('Social Networks', 'ops'), array($meta_box, 'init'), $post_type, // Admin page (or post type)

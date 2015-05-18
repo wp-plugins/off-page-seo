@@ -268,7 +268,7 @@ class OPS_Rank_Reporter {
                                     Reciprocal checking is turned off. You can turn it on in <a href="admin.php?page=ops_settings">Settings</a>. But first select which backlinks to check (in the edit mode).
                                 <?php endif; ?>
                             <?php else : ?>
-                                    Reciprocal checking is unavailable in free version.
+                                Reciprocal checking is unavailable in free version.
                             <?php endif; ?>
                         </div>
                         <a href="#" class="ops-dash-edit-mode" data-rowid="<?php echo $row_id ?>">Edit mode</a>
@@ -448,7 +448,7 @@ class OPS_Rank_Reporter {
             $row = $wpdb->get_row("SELECT * FROM " . $wpdb->base_prefix . "ops_rank_report WHERE url = '" . $graph['url'] . "' AND keyword = '" . $graph['keyword'] . "'", ARRAY_A);
 
             $positions = unserialize($row['positions']);
-            
+
             // prepend element to array
             array_unshift($positions, $new_position);
 
@@ -538,9 +538,9 @@ class OPS_Rank_Reporter {
         if (is_array($uns_data) && count($uns_data) != 0) {
 
             // sort according to date
-            usort($uns_data, function($a, $b) {
-                return $b['date'] - $a['date'];
-            });
+            usort($uns_data, create_function( '$a, $b', 'return $b[\'date\'] - $a[\'date\'];'));
+
+        
             foreach ($uns_data as $link):
                 ?>
                 <div class = "single-backlink">

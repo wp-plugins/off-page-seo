@@ -14,16 +14,27 @@ class OPS_Meta_Box_Shares {
         ?>
         <div class="wrapper" id="ops-meta-box-shares">
             <?php
-            $pid = sanitize_text_field($_GET['post']);
-            $meta = get_post_meta($pid);
-            $shares = unserialize($meta['ops_shares'][0]);
-            ?>
-            <?php foreach ($shares['count'] as $key => $value): ?>
-                <div class="ops-row <?php echo $key ?>">
-                    <?php echo $value; ?>
-                </div>
-            <?php endforeach; ?>
-            <p>Social Shares for this article.</p>
+            if (!isset($_GET['post'])) {
+                echo "<p>You are creating a new post.</p>";
+            } else {
+                $pid = sanitize_text_field($_GET['post']);
+                $meta = get_post_meta($pid);
+                if (isset($meta['ops_shares'][0])):
+                    $shares = unserialize($meta['ops_shares'][0]);
+                    if (!is_array($shares)) {
+                        $shares = array();
+                    }
+                    ?>
+                    <?php foreach ($shares['count'] as $key => $value): ?>
+                        <div class="ops-row <?php echo $key ?>">
+                            <?php echo $value; ?>
+                        </div>
+                    <?php endforeach; ?>
+                    <p>Social Shares for this article.</p>
+                <?php else : ?>
+                    <p>This post has not been tested yet.</p>
+                <?php endif; ?>
+            <?php } ?>
         </div>
         <?php
     }

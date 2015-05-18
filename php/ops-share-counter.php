@@ -81,7 +81,7 @@ class OPS_Share_Counter {
 
         $diff = time() - $last_check[0];
 
-        if ($diff > 43200) : // 43200 if we have not controlled shares for 1/2 day
+        if ($diff > 172800) : // 43200 if we have not controlled shares for 2 days
             ?>
             <script type="text/javascript" >
                 jQuery(document).ready(function ($) {

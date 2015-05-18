@@ -3,9 +3,9 @@ Contributors: proka
 Stable tag: trunk
 Plugin URI: http://www.offpageseoplugin.com/
 Description: Turn your WordPress site into the ultimate SEO tool! Monitor SERP progress, get backlinks, track your backlinks, analyze competitors, and much more.
-Version: 2.0.0.
+Version: 2.0.1.
 Tags: seo, off page, backlinks, serp, google, rank reporter, rank checker, rank, guest posting, guest blogging, reciprocal check, track backlinks, backlinks costs, tracker, rankings
-Tested up to: 4.1.0
+Tested up to: 4.2.0
 Requires at least: 3.0.1
 Author: Jakub Glos
 Author URI: http://www.offpageseoplugin.com/
@@ -56,6 +56,10 @@ Installation
 1. Plugin introduction.
 
 == Changelog ==
+
+= 2.0.1. =
+* Social share counts reduced to stop hitting hosting limits - you need to activate it first
+* Minor bugs fix
 
 = 2.0.0. =
 * Going premium, in free mode 2 keywords are available

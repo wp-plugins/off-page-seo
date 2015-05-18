@@ -15,6 +15,7 @@ class OPS_Multisite {
                 'ops_share_timer' => 0,
                 'ops_all_shares_checked' => 0,
                 'reciprocal_control' => '',
+                'control_shares' => '',
                 'premium_code' => '',
                 'site_info' => array(
                     'page_rank' => 0,

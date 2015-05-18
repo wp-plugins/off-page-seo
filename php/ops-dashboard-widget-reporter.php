@@ -14,8 +14,10 @@ class OPS_Dashboard_Widget_Reporter {
         ?>
         <div class="ops-dashboard-widget">
             <?php
+            $n = 0;
             if (isset($settings['graphs'])):
                 foreach ($settings['graphs'] as $graph) :
+                    $n++;
 
                     // set positions
                     $positions = OPS_Rank_Reporter::ops_get_positions($graph['url'], $graph['keyword']);
@@ -65,6 +67,12 @@ class OPS_Dashboard_Widget_Reporter {
                         </div>
 
                     </div>
+
+                    <?php if ($n == 2 && Off_Page_SEO::ops_is_premium() == 0): ?>
+                        You are using free version. Please <a href="<?php echo Off_Page_SEO::$mother ?>" target="_blank">upgrade to premium</a> to analyze more keywords.
+                        <?php break; ?>
+                    <?php endif; ?>
+
                 <?php endforeach; ?> 
                 <div class="ops-schedule">
                     Last check: <strong><?php echo date(Off_Page_SEO::ops_get_date_format() . ' H:i:s', $settings['last_check']); ?></strong>
