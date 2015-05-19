@@ -1,16 +1,14 @@
 <?php
-
 /*
   Plugin Name: Off Page SEO
   Plugin URI: http://www.offpageseoplugin.com
   Description: Provides lot of stools to help you with the off-page SEO.
-  Version: 2.0.1.
+  Version: 2.0.2.
   Author: Jakub Glos
   Author URI: http://www.offpageseoplugin.com
   License: CC-NC-ND
   Text Domain: off-page-seo
  */
-
 //ini_set('display_errors', 1);
 //ini_set('display_startup_errors', 1);
 //error_reporting(-1);

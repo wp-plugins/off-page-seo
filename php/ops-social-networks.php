@@ -17,8 +17,11 @@ class OPS_Social_Networks {
                     <li>Social Networks</li>
                 </ul>
             </div>
+            <?php if(isset($settings['control_shares']) && $settings['control_shares'] == 'on'):?>
+            <?php else : ?>
             <p><strong style='font-size: 20px;'>Social share control is turned off. You can turn it on in Settings, but be aware of your hosting limits as this feature can be a bit expensive.</strong></p>
             <p>If the plugin stops reporting the rankings (reports positions of 100), first thing you should do is turn off this feature.</p>
+            <?php endif; ?>
             <?php $this->ops_render_shares($settings); ?>
         </div>
         <?php
