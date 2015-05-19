@@ -1,6 +1,6 @@
 <?php
 
-if (!class_exists('Alaxa_Rank')):
+if (!class_exists('Alexa_Rank')):
 
     class Alexa_Rank {
 
