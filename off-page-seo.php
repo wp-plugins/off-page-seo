@@ -3,10 +3,10 @@
   Plugin Name: Off Page SEO
   Plugin URI: http://www.offpageseoplugin.com
   Description: Provides lot of stools to help you with the off-page SEO.
-  Version: 2.0.2.
+  Version: 2.0.3.
   Author: Jakub Glos
   Author URI: http://www.offpageseoplugin.com
-  License: CC-NC-ND
+  License: GPLv2 or later
   Text Domain: off-page-seo
  */
 //ini_set('display_errors', 1);
